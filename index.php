@@ -8,14 +8,14 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
 }
 ?>
 <!DOCTYPE html>
-<html lang="si">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Mental Wellness Check-in System</title>
     
     <!-- Modern Typography & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -30,8 +30,8 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
             --text-main: #1e293b;
             --text-muted: #64748b;
             --border: #e2e8f0;
-            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
-            --shadow: 0 12px 28px -6px rgba(30, 77, 43, 0.08);
+            --shadow-sm: 0 2px 6px rgba(0,0,0,0.04);
+            --shadow: 0 14px 30px -6px rgba(30, 77, 43, 0.08);
             --radius: 16px;
             --danger: #dc2626;
             --success: #16a34a;
@@ -47,7 +47,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
             --primary: #52b788;
             --primary-accent: #74c69d;
             --primary-light: #182820;
-            --shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.4);
+            --shadow: 0 14px 30px -6px rgba(0, 0, 0, 0.4);
             --danger: #ef4444;
         }
 
@@ -55,104 +55,133 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
         html { scroll-behavior: smooth; }
         body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
 
-        /* Institutional Navbar */
+        .wrapper { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+
+        /* ==========================================================================
+           1. SIMPLIFIED & ELEGANT INSTITUTIONAL NAVBAR
+           ========================================================================== */
         .site-navbar {
             position: sticky; top: 0; background: var(--card-bg);
-            border-bottom: 1px solid var(--border); padding: 12px 30px;
+            border-bottom: 1px solid var(--border); padding: 12px 28px;
             display: flex; align-items: center; justify-content: space-between;
-            gap: 16px; z-index: 1000; box-shadow: var(--shadow-sm);
+            gap: 20px; z-index: 1000; box-shadow: var(--shadow-sm);
         }
 
         .brand-logo {
             display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-main);
+            flex-shrink: 0;
         }
         .brand-icon-box {
-            width: 40px; height: 40px; border-radius: 10px; background: var(--primary-light);
+            width: 40px; height: 40px; border-radius: 12px; background: var(--primary-light);
             color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
         }
         .brand-meta { line-height: 1.2; }
-        .brand-title { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
-        .brand-sub { font-size: 0.75rem; color: var(--text-muted); }
+        .brand-title { font-weight: 800; font-size: 1.15rem; color: var(--primary); letter-spacing: -0.3px; }
+        .brand-sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
 
-        .nav-menu { display: flex; gap: 24px; list-style: none; align-items: center; }
-        .nav-menu a { text-decoration: none; color: var(--text-main); font-size: 0.9rem; font-weight: 600; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+        .nav-menu { display: flex; gap: 28px; list-style: none; align-items: center; }
+        .nav-menu a {
+            text-decoration: none; color: var(--text-main); font-size: 0.925rem; font-weight: 600;
+            display: flex; align-items: center; gap: 7px; transition: color 0.2s; white-space: nowrap;
+        }
         .nav-menu a:hover { color: var(--primary); }
 
-        .nav-toolbar { display: flex; align-items: center; gap: 10px; }
+        .nav-toolbar { display: flex; align-items: center; gap: 12px; }
 
-        .student-chip {
-            display: flex; align-items: center; gap: 10px; padding: 6px 14px; border-radius: 30px;
-            background: var(--primary-light); border: 1px solid var(--border); text-decoration: none; color: var(--text-main);
+        /* Sound Pill Button */
+        .btn-sound-pill {
+            background: var(--primary-light); border: 1px solid var(--border); color: var(--primary);
+            padding: 8px 14px; border-radius: 30px; font-size: 0.85rem; font-weight: 700;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
         }
+        .btn-sound-pill:hover { background: var(--primary); color: #fff; }
+        .btn-sound-pill.playing { background: var(--primary); color: #fff; box-shadow: 0 0 12px rgba(30, 77, 43, 0.35); }
+
+        /* Student Profile Dropdown Container */
+        .profile-dropdown-container { position: relative; }
+        .student-chip-btn {
+            display: flex; align-items: center; gap: 10px; padding: 6px 14px 6px 8px; border-radius: 30px;
+            background: var(--bg); border: 1px solid var(--border); cursor: pointer; color: var(--text-main);
+            transition: all 0.2s;
+        }
+        .student-chip-btn:hover { border-color: var(--primary); background: var(--primary-light); }
         .student-avatar {
-            width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff;
-            display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;
+            width: 32px; height: 32px; border-radius: 50%; background: var(--primary); color: #fff;
+            display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 700;
         }
-        .student-details { line-height: 1.1; }
-        .student-name { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
-        .student-id { font-size: 0.7rem; color: var(--text-muted); }
+        .student-name-text { font-size: 0.875rem; font-weight: 700; color: var(--primary); max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-        .btn-tool {
-            background: var(--card-bg); border: 1px solid var(--border); color: var(--text-main);
-            padding: 7px 12px; border-radius: 10px; font-size: 0.825rem; font-weight: 600;
-            cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+        .profile-dropdown-menu {
+            position: absolute; top: calc(100% + 10px); right: 0; width: 260px; background: var(--card-bg);
+            border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow);
+            padding: 10px 0; display: none; flex-direction: column; z-index: 2000;
         }
-        .btn-tool:hover { border-color: var(--primary); color: var(--primary); }
-        .btn-tool-danger { color: var(--danger); }
-        .btn-tool-danger:hover { background: #fee2e2; border-color: #fca5a5; }
-
-        .wrapper { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-
-        /* Ambient Audio Strip */
-        .ambient-strip {
-            background: var(--card-bg); border-bottom: 1px solid var(--border);
-            padding: 10px 30px; display: flex; justify-content: center; align-items: center; gap: 16px; font-size: 0.85rem; flex-wrap: wrap;
+        .profile-dropdown-menu.show { display: flex; animation: dropDownFade 0.2s ease; }
+        @keyframes dropDownFade {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
+        .dropdown-header { padding: 12px 18px; line-height: 1.3; }
+        .dropdown-name { font-weight: 700; font-size: 0.95rem; color: var(--text-main); }
+        .dropdown-meta { font-size: 0.775rem; color: var(--text-muted); margin-top: 3px; }
+        .dropdown-divider { height: 1px; background: var(--border); margin: 6px 0; }
+        .dropdown-item {
+            padding: 10px 18px; color: var(--text-main); text-decoration: none; font-size: 0.875rem;
+            font-weight: 600; display: flex; align-items: center; gap: 10px; transition: background 0.15s;
+        }
+        .dropdown-item:hover { background: var(--primary-light); color: var(--primary); }
+        .dropdown-danger { color: var(--danger); }
+        .dropdown-danger:hover { background: #fee2e2; color: #b91c1c; }
 
-        /* Hero Banner */
+        /* ==========================================================================
+           2. HERO SECTION
+           ========================================================================== */
         .hero-section {
-            padding: 45px 0; background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 100%);
+            padding: 55px 0 50px 0;
+            background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 100%);
             border-bottom: 1px solid var(--border);
         }
-        .hero-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+        .hero-layout { display: grid; grid-template-columns: 1.2fr 0.9fr; gap: 40px; align-items: center; }
         .hero-badge {
-            display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px;
+            display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 20px;
             background: var(--card-bg); border: 1px solid var(--border); color: var(--primary);
-            font-size: 0.8rem; font-weight: 700; margin-bottom: 16px;
+            font-size: 0.825rem; font-weight: 700; margin-bottom: 16px; box-shadow: var(--shadow-sm);
         }
-        .hero-heading { font-size: 2.2rem; line-height: 1.25; font-weight: 700; margin-bottom: 14px; }
-        .hero-lead { font-size: 1rem; color: var(--text-muted); margin-bottom: 28px; line-height: 1.7; }
-        .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+        .hero-heading { font-size: 2.35rem; line-height: 1.25; font-weight: 800; margin-bottom: 14px; letter-spacing: -0.5px; }
+        .hero-lead { font-size: 1.05rem; color: var(--text-muted); margin-bottom: 30px; line-height: 1.7; }
+        .hero-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
 
         .btn-primary-action {
-            background: var(--primary); color: #fff; padding: 12px 26px; border-radius: 12px;
-            font-weight: 600; font-size: 0.925rem; text-decoration: none; border: none; cursor: pointer;
-            display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+            background: var(--primary); color: #fff; padding: 13px 26px; border-radius: 12px;
+            font-weight: 700; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; box-shadow: 0 4px 14px rgba(30, 77, 43, 0.2);
         }
-        .btn-primary-action:hover { background: var(--primary-accent); transform: translateY(-1px); }
+        .btn-primary-action:hover { background: var(--primary-accent); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(30, 77, 43, 0.3); }
 
         .btn-outline-action {
-            background: var(--card-bg); color: var(--text-main); padding: 12px 22px; border-radius: 12px;
-            font-weight: 600; font-size: 0.925rem; text-decoration: none; border: 1px solid var(--border); cursor: pointer;
-            display: inline-flex; align-items: center; gap: 8px;
+            background: var(--card-bg); color: var(--text-main); padding: 13px 24px; border-radius: 12px;
+            font-weight: 700; font-size: 0.95rem; text-decoration: none; border: 1.5px solid var(--border); cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
         }
-        .btn-outline-action:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-outline-action:hover { border-color: var(--primary); color: var(--primary); transform: translateY(-2px); }
 
         .hero-visual-card {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 30px; box-shadow: var(--shadow); text-align: center;
+            padding: 32px 28px; box-shadow: var(--shadow); text-align: center;
         }
         .hero-visual-icon {
-            width: 70px; height: 70px; border-radius: 50%; background: var(--primary-light);
+            width: 68px; height: 68px; border-radius: 50%; background: var(--primary-light);
             color: var(--primary); display: flex; align-items: center; justify-content: center;
             font-size: 2rem; margin: 0 auto 16px auto;
         }
 
-        /* Section Layout */
-        .section-wrapper { padding: 50px 0; border-bottom: 1px solid var(--border); }
+        /* ==========================================================================
+           3. SECTION COMMON STYLES
+           ========================================================================== */
+        .section-wrapper { padding: 55px 0; border-bottom: 1px solid var(--border); }
         .section-header { text-align: center; margin-bottom: 35px; }
-        .section-title { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
-        .section-subtitle { font-size: 0.95rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+        .section-title { font-size: 1.7rem; font-weight: 800; color: var(--primary); margin-bottom: 8px; letter-spacing: -0.3px; }
+        .section-subtitle { font-size: 0.98rem; color: var(--text-muted); max-width: 620px; margin: 0 auto; line-height: 1.6; }
 
         /* Mood Vector Cards Grid */
         .mood-cards-grid {
@@ -165,7 +194,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
         .mood-card-item:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow); }
         .mood-card-item.active { border-color: var(--primary); background: var(--primary-light); box-shadow: var(--shadow); }
         .mood-icon-wrapper {
-            width: 50px; height: 50px; border-radius: 12px; margin: 0 auto 14px auto;
+            width: 52px; height: 52px; border-radius: 14px; margin: 0 auto 14px auto;
             display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
         }
         .icon-thriving { background: #dcfce7; color: #15803d; }
@@ -174,56 +203,58 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
         .icon-distressed { background: #fee2e2; color: #b91c1c; }
 
         .mood-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
-        .mood-desc { font-size: 0.8rem; color: var(--text-muted); }
+        .mood-desc { font-size: 0.825rem; color: var(--text-muted); }
 
         /* Assessment Card */
         .assessment-card {
-            max-width: 720px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+            max-width: 740px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 34px; box-shadow: var(--shadow);
         }
         .tab-bar { display: flex; background: var(--primary-light); border-radius: 12px; padding: 6px; gap: 6px; margin-bottom: 24px; }
         .tab-btn {
-            flex: 1; padding: 10px; border: none; background: transparent; border-radius: 8px;
-            font-size: 0.88rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
+            flex: 1; padding: 11px; border: none; background: transparent; border-radius: 8px;
+            font-size: 0.9rem; font-weight: 700; color: var(--text-muted); cursor: pointer; transition: all 0.2s;
         }
         .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: var(--shadow-sm); }
 
         .progress-track { width: 100%; height: 6px; background: var(--primary-light); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
         .progress-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
 
-        .question-statement { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 20px; min-height: 56px; }
+        .question-statement { font-size: 1.2rem; font-weight: 700; color: var(--text-main); margin-bottom: 22px; min-height: 56px; }
         .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
         .option-choice {
             padding: 14px 18px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
-            font-size: 0.925rem; font-weight: 500; display: flex; align-items: center; justify-content: space-between;
+            font-size: 0.95rem; font-weight: 600; display: flex; align-items: center; justify-content: space-between;
             background: var(--bg); transition: all 0.2s;
         }
         .option-choice:hover { border-color: var(--primary); background: var(--primary-light); }
         .option-choice.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 700; color: var(--primary); }
 
-        /* Counseling Banner */
-        .counsel-strip {
-            background: linear-gradient(135deg, var(--primary), #1b4332); color: #fff;
-            border-radius: var(--radius); padding: 36px; display: flex; justify-content: space-between;
-            align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: var(--shadow);
+        /* Relief Cards Grid */
+        .relief-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .relief-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 28px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between;
         }
-        .counsel-strip h3 { font-size: 1.35rem; margin-bottom: 6px; }
-        .counsel-strip p { opacity: 0.9; font-size: 0.95rem; }
+        .relief-icon {
+            width: 46px; height: 46px; border-radius: 12px; background: var(--primary-light); color: var(--primary);
+            display: flex; align-items: center; justify-content: center; font-size: 1.3rem; margin-bottom: 16px;
+        }
 
-        /* Tables & Helplines */
+        /* Clean Tables & Helplines */
         .clean-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
         .clean-table th, .clean-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
         .clean-table th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
 
-        .helpline-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+        .helpline-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px; }
         .helpline-box {
             background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
-            padding: 22px; text-align: center; box-shadow: var(--shadow-sm);
+            padding: 24px; text-align: center; box-shadow: var(--shadow-sm);
         }
-        .helpline-number { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 6px 0 2px 0; }
+        .helpline-number { font-size: 1.6rem; font-weight: 800; color: var(--primary); margin: 6px 0 2px 0; }
 
         /* Modals */
-        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 3000; align-items: center; justify-content: center; }
         .modal-panel { background: var(--card-bg); border-radius: var(--radius); max-width: 500px; width: 92%; padding: 32px; position: relative; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto; }
         .modal-close { position: absolute; top: 16px; right: 18px; font-size: 1.4rem; background: none; border: none; cursor: pointer; color: var(--text-muted); }
 
@@ -232,25 +263,27 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
         .form-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text-main); font-size: 0.9rem; outline: none; }
         .form-input:focus { border-color: var(--primary); }
 
-        /* Pulsating Breathing Circle */
+        /* Pulsating Breathing Orb */
         .breath-orb {
-            width: 130px; height: 130px; border-radius: 50%; background: var(--primary-light);
+            width: 140px; height: 140px; border-radius: 50%; background: var(--primary-light);
             border: 4px solid var(--primary); margin: 24px auto; display: flex; align-items: center;
-            justify-content: center; font-weight: 700; color: var(--primary); font-size: 1rem;
+            justify-content: center; font-weight: 700; color: var(--primary); font-size: 1.05rem;
             transition: transform 4s ease-in-out;
         }
         .breath-orb.expand { transform: scale(1.35); transition: transform 4s ease-in-out; }
         .breath-orb.hold { transform: scale(1.35); }
         .breath-orb.shrink { transform: scale(0.85); transition: transform 8s ease-in-out; }
 
-        /* Chatbot Floating Widget */
+        /* Floating AI Chatbot */
         .chat-trigger {
             position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; border-radius: 50%;
             background: var(--primary); color: #fff; border: none; box-shadow: 0 8px 24px rgba(30, 77, 43, 0.35);
             cursor: pointer; z-index: 1500; font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s ease;
         }
+        .chat-trigger:hover { transform: scale(1.05); }
         .chat-drawer {
-            position: fixed; bottom: 95px; right: 25px; width: 370px; height: 520px; max-width: calc(100vw - 40px);
+            position: fixed; bottom: 95px; right: 25px; width: 380px; height: 520px; max-width: calc(100vw - 40px);
             background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
             box-shadow: var(--shadow); z-index: 1500; display: none; flex-direction: column; overflow: hidden;
         }
@@ -260,9 +293,9 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
         .chat-bubble.bot { background: var(--card-bg); color: var(--text-main); align-self: flex-start; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
         .chat-bubble.user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        @media (max-width: 850px) {
+        @media (max-width: 880px) {
             .hero-layout { grid-template-columns: 1fr; text-align: center; }
-            .hero-heading { font-size: 1.8rem; }
+            .hero-heading { font-size: 1.9rem; }
             .nav-menu { display: none; }
         }
     </style>
@@ -271,89 +304,95 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
 
 <?php display_flash(); ?>
 
-<!-- 1. INSTITUTIONAL TOP NAVBAR -->
+<!-- ==========================================================================
+     1. INSTITUTIONAL TOP NAVBAR
+     ========================================================================== -->
 <header class="site-navbar">
     <a href="<?php echo SITE_URL; ?>/index.php" class="brand-logo">
         <div class="brand-icon-box">
-            <i class="fa-solid fa-brain"></i>
+            <i class="fa-solid fa-leaf"></i>
         </div>
         <div class="brand-meta">
-            <div class="brand-title" id="txtBrand">Student Mental Wellness</div>
-            <div class="brand-sub">Confidential Check-in System</div>
+            <div class="brand-title" id="txtBrand">Sansun</div>
+            <div class="brand-sub">Student Mental Wellness</div>
         </div>
     </a>
 
+    <!-- Clean 4-Item Navigation Links -->
     <ul class="nav-menu">
-        <li><a href="#assessment"><i class="fa-solid fa-clipboard-check"></i> <span id="navAssessment">Assessment</span></a></li>
-        <li><a href="#mood"><i class="fa-solid fa-seedling"></i> <span id="navMood">Mood Log</span></a></li>
+        <li><a href="#mood"><i class="fa-solid fa-seedling"></i> <span id="navMood">Daily Reflection</span></a></li>
+        <li><a href="#assessment"><i class="fa-solid fa-clipboard-check"></i> <span id="navAssessment">Self-Check</span></a></li>
         <li><a href="#counseling"><i class="fa-solid fa-user-doctor"></i> <span id="navCounseling">Counseling</span></a></li>
-        <li><a href="#history"><i class="fa-solid fa-chart-line"></i> <span id="navHistory">History</span></a></li>
-        <li><a href="#directory"><i class="fa-solid fa-hospital"></i> <span id="navDirectory">Clinics</span></a></li>
-        <li><a href="<?php echo SITE_URL; ?>/dashboard.php"><i class="fa-solid fa-user"></i> <span>Dashboard</span></a></li>
+        <li><a href="#directory"><i class="fa-solid fa-phone-volume"></i> <span id="navDirectory">24/7 Support</span></a></li>
     </ul>
 
+    <!-- Clean Toolbar: Ambient Sound Pill + Profile Dropdown -->
     <div class="nav-toolbar">
-        <!-- Logged-in Student Identity Chip -->
-        <a href="<?php echo SITE_URL; ?>/dashboard.php" class="student-chip">
-            <div class="student-avatar"><?php echo strtoupper(substr($currentUser['name'], 0, 1)); ?></div>
-            <div class="student-details">
-                <div class="student-name"><?php echo htmlspecialchars($currentUser['name']); ?></div>
-                <div class="student-id"><?php echo htmlspecialchars($currentUser['student_id'] ?: 'Student'); ?></div>
+        <button class="btn-sound-pill" onclick="toggleAudio()" id="btnAudio" title="Toggle Calming Ambient Rain">
+            <i class="fa-solid fa-cloud-rain" id="audioIcon"></i>
+            <span id="audioText">Calm Rain</span>
+        </button>
+
+        <div class="profile-dropdown-container">
+            <button class="student-chip-btn" onclick="toggleProfileMenu(event)" id="profileTrigger">
+                <div class="student-avatar"><?php echo strtoupper(substr($currentUser['name'], 0, 1)); ?></div>
+                <div class="student-name-text"><?php echo htmlspecialchars($currentUser['name']); ?></div>
+                <i class="fa-solid fa-chevron-down" style="font-size:0.7rem;"></i>
+            </button>
+
+            <div class="profile-dropdown-menu" id="profileDropdown">
+                <div class="dropdown-header">
+                    <div class="dropdown-name"><?php echo htmlspecialchars($currentUser['name']); ?></div>
+                    <div class="dropdown-meta">
+                        ID: <strong><?php echo htmlspecialchars($currentUser['student_id'] ?: 'DIT 14253'); ?></strong> &bull; <?php echo htmlspecialchars($currentUser['intake']); ?>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="<?php echo SITE_URL; ?>/dashboard.php" class="dropdown-item">
+                    <i class="fa-solid fa-chart-pie" style="color:var(--primary);"></i> Student Dashboard
+                </a>
+                <a href="javascript:void(0)" onclick="openBreathingModal(); closeProfileMenu();" class="dropdown-item">
+                    <i class="fa-solid fa-wind" style="color:var(--accent);"></i> 4-7-8 Breathing Exercise
+                </a>
+                <a href="javascript:void(0)" onclick="openGroundingModal(); closeProfileMenu();" class="dropdown-item">
+                    <i class="fa-solid fa-hands-holding" style="color:var(--accent);"></i> 5-4-3-2-1 Grounding
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="javascript:void(0)" onclick="toggleLanguage(); closeProfileMenu();" class="dropdown-item">
+                    <i class="fa-solid fa-globe"></i> Switch to <span id="dropLangTxt" style="font-weight:700; margin-left:4px;">සිංහල</span>
+                </a>
+                <a href="javascript:void(0)" onclick="toggleThemeMode(); closeProfileMenu();" class="dropdown-item">
+                    <i class="fa-solid fa-moon"></i> Toggle Dark/Light Mode
+                </a>
+                <div class="dropdown-divider"></div>
+                <a href="<?php echo SITE_URL; ?>/logout.php" class="dropdown-item dropdown-danger">
+                    <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+                </a>
             </div>
-        </a>
-
-        <!-- Interactive Wellness Modals Controls -->
-        <button class="btn-tool" onclick="openBreathingModal()" title="4-7-8 Breathing Technique">
-            <i class="fa-solid fa-wind"></i> <span id="btnTxtBreath">Breathing</span>
-        </button>
-        <button class="btn-tool" onclick="openGroundingModal()" title="5-4-3-2-1 Sensory Grounding">
-            <i class="fa-solid fa-hands-holding"></i> Grounding
-        </button>
-
-        <!-- Language & Theme Switchers -->
-        <button class="btn-tool" onclick="toggleLanguage()">
-            <i class="fa-solid fa-globe"></i> <span id="langTxt">සිංහල</span>
-        </button>
-        <button class="btn-tool" onclick="toggleTheme()" aria-label="Toggle Theme">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-
-        <!-- Logout -->
-        <a href="<?php echo SITE_URL; ?>/logout.php" class="btn-tool btn-tool-danger" title="Sign Out">
-            <i class="fa-solid fa-right-from-bracket"></i>
-        </a>
+        </div>
     </div>
 </header>
 
-<!-- 2. AMBIENT RELAXATION AUDIO STRIP -->
-<div class="ambient-strip">
-    <span id="txtAudioLabel"><i class="fa-solid fa-headphones"></i> Nature Sound Therapy (Ambient Rain):</span>
-    <button class="btn-tool" onclick="toggleAmbientAudio()" id="btnAudioToggle">
-        <i class="fa-solid fa-play" id="audioIcon"></i> Play Sound
-    </button>
-    <a href="https://wa.me/94771234567?text=Hello%20Student%20Wellness%20Support" target="_blank" rel="noopener noreferrer" class="btn-tool" style="color:#16a34a;">
-        <i class="fa-brands fa-whatsapp"></i> Student Support Desk
-    </a>
-</div>
-
-<!-- 3. HERO SECTION -->
+<!-- ==========================================================================
+     2. HERO SECTION
+     ========================================================================== -->
 <section class="hero-section">
     <div class="wrapper">
         <div class="hero-layout">
             <div>
                 <div class="hero-badge">
-                    <i class="fa-solid fa-shield-halved"></i> Institutional Counseling Bridge
+                    <i class="fa-solid fa-shield-halved"></i> University Student Sanctuary
                 </div>
-                <h1 class="hero-heading" id="heroTitle">A Safe & Confidential Space for Your Mental Wellness</h1>
-                <p class="hero-lead" id="heroDesc">
-                    Identify academic, exam, and personal stress early. Regular check-ins empower you to track emotional resilience and access professional counseling when you need it.
+                <h1 class="hero-heading" id="heroHeading">A Safe & Confidential Space for Your Mental Wellness</h1>
+                <p class="hero-lead" id="heroDescription">
+                    Track your emotional resilience, conduct private screening assessments (PHQ-9 & GAD-7), and connect with certified counselors whenever you need support.
                 </p>
                 <div class="hero-buttons">
                     <a href="#assessment" class="btn-primary-action">
                         <i class="fa-solid fa-heart-pulse"></i> <span id="heroBtn">Take Self-Check Assessment</span>
                     </a>
                     <a href="#mood" class="btn-outline-action">
-                        <i class="fa-solid fa-calendar-check"></i> <span id="heroMoodBtn">Daily Reflection</span>
+                        <i class="fa-solid fa-seedling"></i> <span id="heroMoodBtn">Daily Reflection</span>
                     </a>
                 </div>
             </div>
@@ -361,23 +400,23 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
             <div>
                 <div class="hero-visual-card">
                     <div class="hero-visual-icon">
-                        <i class="fa-solid fa-seedling"></i>
+                        <i class="fa-solid fa-leaf"></i>
                     </div>
-                    <h3 style="font-size:1.25rem; margin-bottom:8px;" id="cardGreeting">Welcome, <?php echo htmlspecialchars($currentUser['name']); ?></h3>
+                    <h3 style="font-size:1.3rem; margin-bottom:8px;" id="cardGreeting">Welcome, <?php echo htmlspecialchars($currentUser['name']); ?></h3>
                     <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:20px;">
                         Registration ID: <strong><?php echo htmlspecialchars($currentUser['student_id']); ?></strong> &bull; <?php echo htmlspecialchars($currentUser['intake']); ?>
                     </p>
                     <div style="display:flex; justify-content:space-around; border-top:1px solid var(--border); padding-top:16px;">
                         <div>
-                            <div style="font-size:1.4rem; font-weight:700; color:var(--primary);">100%</div>
+                            <div style="font-size:1.4rem; font-weight:800; color:var(--primary);">100%</div>
                             <small style="font-size:0.75rem; color:var(--text-muted);">Confidential</small>
                         </div>
                         <div>
-                            <div style="font-size:1.4rem; font-weight:700; color:var(--primary);">PHQ-9</div>
+                            <div style="font-size:1.4rem; font-weight:800; color:var(--primary);">PHQ-9</div>
                             <small style="font-size:0.75rem; color:var(--text-muted);">Depression Scale</small>
                         </div>
                         <div>
-                            <div style="font-size:1.4rem; font-weight:700; color:var(--primary);">GAD-7</div>
+                            <div style="font-size:1.4rem; font-weight:800; color:var(--primary);">GAD-7</div>
                             <small style="font-size:0.75rem; color:var(--text-muted);">Anxiety Scale</small>
                         </div>
                     </div>
@@ -387,7 +426,9 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
     </div>
 </section>
 
-<!-- 4. VECTOR-ICON DAILY MOOD JOURNAL -->
+<!-- ==========================================================================
+     3. VECTOR-ICON DAILY MOOD REFLECTION
+     ========================================================================== -->
 <section class="section-wrapper" id="mood">
     <div class="wrapper">
         <div class="section-header">
@@ -407,7 +448,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
                 </div>
 
                 <!-- Balanced -->
-                <div class="mood-card-item" onclick="selectVectorMood('balanced', 'fa-seedling', 'Balanced / සන්සුන්', this)">
+                <div class="mood-card-item active" onclick="selectVectorMood('balanced', 'fa-seedling', 'Balanced / සන්සුන්', this)">
                     <div class="mood-icon-wrapper icon-balanced">
                         <i class="fa-solid fa-seedling"></i>
                     </div>
@@ -451,52 +492,35 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
     </div>
 </section>
 
-<!-- 5. COUNSELING STRIP BANNER -->
-<section class="section-wrapper" id="counseling">
-    <div class="wrapper">
-        <div class="counsel-strip">
-            <div>
-                <h3 id="counselStripTitle">Need Confidential Guidance from a Professional Counselor?</h3>
-                <p id="counselStripDesc">Schedule a one-on-one session online or in-person with complete privacy (Anonymous requests permitted).</p>
-            </div>
-            <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                <button class="btn-outline-action" onclick="openCounselingModal()" style="background:#fff; color:var(--primary); font-weight:700;">
-                    <i class="fa-solid fa-calendar-plus"></i> <span id="btnBookCounsel">Schedule Session</span>
-                </button>
-                <a href="tel:1926" class="btn-primary-action" style="background:#dc2626;">
-                    <i class="fa-solid fa-phone"></i> 1926 Emergency
-                </a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- 6. CLINICAL ASSESSMENT WIZARD (PHQ-9 & GAD-7) -->
-<section class="section-wrapper" id="assessment">
+<!-- ==========================================================================
+     4. STANDARDIZED CLINICAL SELF-CHECK ASSESSMENT
+     ========================================================================== -->
+<section class="section-wrapper" id="assessment" style="background:var(--card-bg);">
     <div class="wrapper">
         <div class="section-header">
-            <h2 class="section-title" id="assessHeading">Standardized Self-Check Assessments</h2>
-            <p class="section-subtitle" id="assessSubtitle">Evidence-based clinical questionnaires designed to measure depression and anxiety indicators.</p>
+            <h2 class="section-title" id="assessHeading">Standardized Mental Health Self-Check</h2>
+            <p class="section-subtitle" id="assessSubtitle">Internationally validated PHQ-9 (Depression) and GAD-7 (Anxiety) screening modules.</p>
         </div>
 
         <div class="assessment-card">
             <!-- Tabs -->
             <div class="tab-bar">
-                <button class="tab-btn active" id="tabPhq" onclick="switchTest('phq9')">
-                    <i class="fa-solid fa-chart-simple"></i> PHQ-9 (Depression Screening)
+                <button class="tab-btn active" id="tabPhq" onclick="selectAssessmentTab('phq9')">
+                    PHQ-9 (Depression Scale)
                 </button>
-                <button class="tab-btn" id="tabGad" onclick="switchTest('gad7')">
-                    <i class="fa-solid fa-heart-pulse"></i> GAD-7 (Anxiety Screening)
+                <button class="tab-btn" id="tabGad" onclick="selectAssessmentTab('gad7')">
+                    GAD-7 (Anxiety Scale)
                 </button>
             </div>
 
+            <!-- Progress Bar -->
             <div class="progress-track">
-                <div class="progress-fill" id="progressFill"></div>
+                <div class="progress-fill" id="assessmentProgressBar"></div>
             </div>
 
-            <!-- Question Flow -->
-            <div id="quizFlow">
-                <div style="font-size:0.8rem; font-weight:700; color:var(--primary); text-transform:uppercase; margin-bottom:6px;" id="qStepNum">
+            <!-- Questions Wizard View -->
+            <div id="assessmentWizard">
+                <div style="font-size:0.85rem; color:var(--text-muted); margin-bottom:8px;" id="qStepIndicator">
                     Question 1 of 9
                 </div>
                 <div class="question-statement" id="qStatement"></div>
@@ -512,13 +536,71 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
                 </div>
             </div>
 
-            <!-- Result Box -->
+            <!-- Result Screen -->
             <div id="assessmentResultView" style="display:none; text-align:center; padding:10px 0;"></div>
         </div>
     </div>
 </section>
 
-<!-- 7. SCORE TREND CHART -->
+<!-- ==========================================================================
+     5. IMMEDIATE RELIEF & COUNSELING SERVICES
+     ========================================================================== -->
+<section class="section-wrapper" id="counseling">
+    <div class="wrapper">
+        <div class="section-header">
+            <h2 class="section-title">Support & Relief Tools</h2>
+            <p class="section-subtitle">Take an active step towards feeling better right now, or schedule a conversation with our university counseling team.</p>
+        </div>
+
+        <div class="relief-grid">
+            <!-- Tool 1: 4-7-8 Breathing -->
+            <div class="relief-card">
+                <div>
+                    <div class="relief-icon"><i class="fa-solid fa-wind"></i></div>
+                    <h3 style="font-size:1.15rem; margin-bottom:8px;">4-7-8 Breathing Technique</h3>
+                    <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:18px;">
+                        A clinically proven rhythmic breathing pattern designed to calm your nervous system and reduce acute academic anxiety.
+                    </p>
+                </div>
+                <button class="btn-outline-action" onclick="openBreathingModal()" style="width:100%; justify-content:center;">
+                    <i class="fa-solid fa-play"></i> Start Breathing Exercise
+                </button>
+            </div>
+
+            <!-- Tool 2: 5-4-3-2-1 Grounding -->
+            <div class="relief-card">
+                <div>
+                    <div class="relief-icon"><i class="fa-solid fa-hands-holding"></i></div>
+                    <h3 style="font-size:1.15rem; margin-bottom:8px;">5-4-3-2-1 Sensory Grounding</h3>
+                    <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:18px;">
+                        When feeling overwhelmed or experiencing racing thoughts, use your 5 senses to re-anchor into the present moment.
+                    </p>
+                </div>
+                <button class="btn-outline-action" onclick="openGroundingModal()" style="width:100%; justify-content:center;">
+                    <i class="fa-solid fa-eye"></i> Start Grounding Guide
+                </button>
+            </div>
+
+            <!-- Tool 3: Confidential Counseling -->
+            <div class="relief-card" style="border-color:var(--primary); background:var(--primary-light);">
+                <div>
+                    <div class="relief-icon" style="background:var(--primary); color:#fff;"><i class="fa-solid fa-user-doctor"></i></div>
+                    <h3 style="font-size:1.15rem; margin-bottom:8px; color:var(--primary);">Talk to a Campus Counselor</h3>
+                    <p style="font-size:0.875rem; color:var(--text-main); margin-bottom:18px;">
+                        Institutional counseling sessions are private, confidential, and judgment-free. Both online and in-person formats are available.
+                    </p>
+                </div>
+                <button class="btn-primary-action" onclick="openCounselingModal()" style="width:100%; justify-content:center;">
+                    <i class="fa-solid fa-calendar-check"></i> Book Counseling Session
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==========================================================================
+     6. PERSONAL SCORE HISTORY TRAJECTORY
+     ========================================================================== -->
 <section class="section-wrapper" id="history">
     <div class="wrapper">
         <div class="section-header">
@@ -528,9 +610,9 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
 
         <div style="max-width:850px; margin:0 auto; background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
-                <span style="font-size:0.85rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Historical Trajectory</span>
-                <a href="<?php echo SITE_URL; ?>/dashboard.php" class="btn-tool">
-                    <i class="fa-solid fa-table"></i> View Detailed Logs
+                <span style="font-size:0.85rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Score Trajectory</span>
+                <a href="<?php echo SITE_URL; ?>/dashboard.php" class="btn-outline-action" style="padding:6px 14px; font-size:0.825rem;">
+                    <i class="fa-solid fa-chart-pie"></i> Detailed Dashboard
                 </a>
             </div>
             <div style="position:relative; height:280px;">
@@ -540,15 +622,40 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
     </div>
 </section>
 
-<!-- 8. RESOURCE DIRECTORY & HELPLINES -->
+<!-- ==========================================================================
+     7. 24/7 HELPLINES & CLINIC DIRECTORY
+     ========================================================================== -->
 <section class="section-wrapper" id="directory">
     <div class="wrapper">
         <div class="section-header">
-            <h2 class="section-title" id="dirHeading">Institutional & National Healthcare Directory</h2>
-            <p class="section-subtitle" id="dirSubtitle">Direct contacts to psychiatric and mental healthcare clinics across Sri Lanka.</p>
+            <h2 class="section-title" id="dirHeading">National Crisis Support & Clinics</h2>
+            <p class="section-subtitle" id="dirSubtitle">Free, 24/7 confidential helplines and specialized mental healthcare units in Sri Lanka.</p>
         </div>
 
-        <div style="max-width:900px; margin:0 auto 40px auto; overflow-x:auto;">
+        <div class="helpline-row" style="max-width:900px; margin:0 auto 35px auto;">
+            <div class="helpline-box">
+                <i class="fa-solid fa-phone-volume" style="color:var(--primary); font-size:1.6rem;"></i>
+                <div class="helpline-number">1926</div>
+                <strong id="hl1">National Mental Health Institute</strong>
+                <p style="font-size:0.775rem; color:var(--text-muted); margin-top:4px;">Toll-free 24/7 Government Helpline</p>
+            </div>
+
+            <div class="helpline-box">
+                <i class="fa-solid fa-headset" style="color:var(--primary); font-size:1.6rem;"></i>
+                <div class="helpline-number">1333</div>
+                <strong id="hl2">CCC Line Crisis Support</strong>
+                <p style="font-size:0.775rem; color:var(--text-muted); margin-top:4px;">Confidential emotional relief</p>
+            </div>
+
+            <div class="helpline-box">
+                <i class="fa-solid fa-hands-holding-child" style="color:var(--primary); font-size:1.6rem;"></i>
+                <div class="helpline-number">011 2696666</div>
+                <strong id="hl3">Sri Lanka Sumithrayo</strong>
+                <p style="font-size:0.775rem; color:var(--text-muted); margin-top:4px;">Befriending and suicide prevention</p>
+            </div>
+        </div>
+
+        <div style="max-width:900px; margin:0 auto; overflow-x:auto;">
             <table class="clean-table">
                 <thead>
                     <tr>
@@ -560,44 +667,19 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
                 <tbody id="clinicsTableBody"></tbody>
             </table>
         </div>
-
-        <div class="section-header" style="margin-bottom:20px;">
-            <h3 style="font-size:1.25rem;" id="helpTitle">Emergency 24/7 Support Lines</h3>
-        </div>
-
-        <div class="helpline-row" style="max-width:900px; margin:0 auto;">
-            <div class="helpline-box">
-                <i class="fa-solid fa-phone-volume" style="color:var(--primary); font-size:1.5rem;"></i>
-                <div class="helpline-number">1926</div>
-                <strong id="hl1">National Mental Health Institute</strong>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Toll-free 24/7 Government Helpline</p>
-            </div>
-
-            <div class="helpline-box">
-                <i class="fa-solid fa-headset" style="color:var(--primary); font-size:1.5rem;"></i>
-                <div class="helpline-number">1333</div>
-                <strong id="hl2">CCC Line Crisis Support</strong>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Confidential emotional relief</p>
-            </div>
-
-            <div class="helpline-box">
-                <i class="fa-solid fa-hands-holding-child" style="color:var(--primary); font-size:1.5rem;"></i>
-                <div class="helpline-number">011 2696666</div>
-                <strong id="hl3">Sri Lanka Sumithrayo</strong>
-                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Befriending and suicide prevention</p>
-            </div>
-        </div>
     </div>
 </section>
 
-<!-- 9. MODALS -->
+<!-- ==========================================================================
+     8. MODALS (Breathing, Grounding, Counseling)
+     ========================================================================== -->
 
 <!-- A. 4-7-8 Breathing Guide Modal -->
 <div class="modal-backdrop" id="modalBreath">
     <div class="modal-panel" style="text-align:center;">
         <button class="modal-close" onclick="closeBreathingModal()">&times;</button>
-        <h3 style="font-size:1.3rem; color:var(--primary); margin-bottom:6px;">4-7-8 Breathing Technique</h3>
-        <p style="font-size:0.85rem; color:var(--text-muted);" id="breathSub">A clinically proven rhythm to reduce heart rate and trigger the parasympathetic nervous system.</p>
+        <h3 style="font-size:1.3rem; color:var(--primary); margin-bottom:6px;">4-7-8 Breathing Exercise</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted);" id="breathSub">A clinically proven rhythm to reduce heart rate and trigger relaxation.</p>
         
         <div class="breath-orb" id="breathOrb">Ready...</div>
         <div id="breathInstruction" style="font-weight:700; color:var(--primary); font-size:0.95rem; min-height:26px;"></div>
@@ -611,7 +693,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
     <div class="modal-panel">
         <button class="modal-close" onclick="closeGroundingModal()">&times;</button>
         <h3 style="font-size:1.3rem; color:var(--primary); margin-bottom:8px;">5-4-3-2-1 Sensory Grounding</h3>
-        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:18px;">When experiencing academic panic or racing thoughts, use your 5 senses to re-anchor in the present moment:</p>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:18px;">When experiencing academic panic or racing thoughts, use your 5 senses to re-anchor in the present:</p>
 
         <div style="display:flex; flex-direction:column; gap:10px; font-size:0.9rem;" id="groundingItems"></div>
 
@@ -667,7 +749,9 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
     </div>
 </div>
 
-<!-- 10. AI CHATBOT WIDGET -->
+<!-- ==========================================================================
+     9. AI WELLNESS CHATBOT
+     ========================================================================== -->
 <button class="chat-trigger" onclick="toggleChatWindow()" aria-label="Open AI Assistant">
     <i class="fa-solid fa-comment-dots"></i>
 </button>
@@ -675,7 +759,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
 <div class="chat-drawer" id="chatDrawer">
     <div class="chat-top">
         <div style="display:flex; align-items:center; gap:8px;">
-            <i class="fa-solid fa-brain"></i>
+            <i class="fa-solid fa-leaf"></i>
             <span id="chatHeaderTitle">Wellness AI Assistant</span>
         </div>
         <button onclick="toggleChatWindow()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:1.1rem;"><i class="fa-solid fa-xmark"></i></button>
@@ -686,9 +770,9 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
     </div>
 
     <div style="display:flex; gap:6px; padding:8px 12px; overflow-x:auto; background:var(--card-bg); border-top:1px solid var(--border);">
-        <button class="btn-tool" style="font-size:0.75rem; padding:4px 8px;" onclick="sendQuickPrompt('I feel overwhelmed with exam stress')">Exam Stress</button>
-        <button class="btn-tool" style="font-size:0.75rem; padding:4px 8px;" onclick="sendQuickPrompt('How can I calm my mind right now?')">Calm My Mind</button>
-        <button class="btn-tool" style="font-size:0.75rem; padding:4px 8px;" onclick="sendQuickPrompt('How to contact 1926 helpline?')">1926 Hotline</button>
+        <button class="btn-outline-action" style="font-size:0.75rem; padding:4px 10px;" onclick="sendQuickPrompt('I feel overwhelmed with exam stress')">Exam Stress</button>
+        <button class="btn-outline-action" style="font-size:0.75rem; padding:4px 10px;" onclick="sendQuickPrompt('How can I calm my mind right now?')">Calm My Mind</button>
+        <button class="btn-outline-action" style="font-size:0.75rem; padding:4px 10px;" onclick="sendQuickPrompt('How to contact 1926 helpline?')">1926 Hotline</button>
     </div>
 
     <div style="display:flex; padding:10px; background:var(--card-bg); border-top:1px solid var(--border); gap:8px;">
@@ -699,16 +783,38 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
     </div>
 </div>
 
+<!-- ==========================================================================
+     10. FOOTER
+     ========================================================================== -->
 <footer style="text-align:center; padding:35px 20px; font-size:0.85rem; color:var(--text-muted); border-top:1px solid var(--border); background:var(--card-bg);">
     <p>&copy; <?php echo date('Y'); ?> Student Mental Wellness Check-in System. Developed by B.A.I.D Bopitiya (DIT 14253 - DIT 14 Intake).</p>
     <p style="font-size:0.78rem; margin-top:4px;">Clinical Disclaimer: Screening tools (PHQ-9 & GAD-7) are for educational wellness tracking and do not substitute for formal clinical diagnosis.</p>
 </footer>
 
-<!-- External Scripts Configuration -->
+<!-- Global Client Configuration & Scripts -->
 <script>
     const SITE_ROOT = "<?php echo SITE_URL; ?>";
     const LOGGED_IN_STUDENT_NAME = "<?php echo htmlspecialchars($currentUser['name']); ?>";
     const LOGGED_IN_STUDENT_ID = "<?php echo htmlspecialchars($currentUser['student_id']); ?>";
+
+    // Profile Dropdown Toggle Logic
+    function toggleProfileMenu(e) {
+        if (e) e.stopPropagation();
+        const menu = document.getElementById('profileDropdown');
+        if (menu) menu.classList.toggle('show');
+    }
+
+    function closeProfileMenu() {
+        const menu = document.getElementById('profileDropdown');
+        if (menu) menu.classList.remove('show');
+    }
+
+    document.addEventListener('click', (e) => {
+        const container = document.querySelector('.profile-dropdown-container');
+        if (container && !container.contains(e.target)) {
+            closeProfileMenu();
+        }
+    });
 </script>
 <script src="<?php echo SITE_URL; ?>/assets/js/main.js"></script>
 </body>

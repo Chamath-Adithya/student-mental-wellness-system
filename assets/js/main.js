@@ -292,9 +292,14 @@ function applyLanguageStrings() {
     update('breathSub', d.breathSub);
     update('chatHeaderTitle', d.chatTitle);
 
-    const langBtn = document.getElementById('btnLangToggle');
-    if (langBtn) {
-        langBtn.innerHTML = `<i class="fa-solid fa-language"></i> ${currentLang === 'si' ? 'English' : 'සිංහල'}`;
+    const dropLangTxt = document.getElementById('dropLangTxt');
+    if (dropLangTxt) {
+        dropLangTxt.innerText = (currentLang === 'si') ? 'English' : 'සිංහල';
+    }
+
+    const audioText = document.getElementById('audioText');
+    if (audioText && !isAudioPlaying) {
+        audioText.innerText = (currentLang === 'si') ? 'සන්සුන් වැස්ස' : 'Calm Rain';
     }
 }
 
@@ -666,14 +671,21 @@ async function submitCounselingBooking(event) {
    ========================================================================== */
 function toggleAudio() {
     const icon = document.getElementById('audioIcon');
+    const text = document.getElementById('audioText');
+    const btn = document.getElementById('btnAudio');
+
     if (!isAudioPlaying) {
         startAmbientNoise();
         isAudioPlaying = true;
         if (icon) icon.className = "fa-solid fa-pause";
+        if (text) text.innerText = (currentLang === 'si') ? "වෙහෙස නිවන්න" : "Pause Rain";
+        if (btn) btn.classList.add('playing');
     } else {
         stopAmbientNoise();
         isAudioPlaying = false;
-        if (icon) icon.className = "fa-solid fa-play";
+        if (icon) icon.className = "fa-solid fa-cloud-rain";
+        if (text) text.innerText = (currentLang === 'si') ? "සන්සුන් වැස්ස" : "Calm Rain";
+        if (btn) btn.classList.remove('playing');
     }
 }
 

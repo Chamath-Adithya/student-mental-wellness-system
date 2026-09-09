@@ -105,10 +105,24 @@ function display_flash() {
         unset($_SESSION['flash']);
         $type = htmlspecialchars($f['type']);
         $msg = htmlspecialchars($f['message']);
-        echo "<div class='flash-alert alert-{$type}' style='position:fixed;top:20px;right:20px;z-index:9999;padding:12px 20px;border-radius:10px;background:" . ($type === 'success' ? '#10b981' : '#ef4444') . ";color:#fff;box-shadow:0 10px 25px rgba(0,0,0,0.15);display:flex;align-items:center;gap:10px;'>
+        $icon = ($type === 'success') ? 'fa-circle-check' : 'fa-triangle-exclamation';
+        $bg = ($type === 'success') ? '#1e4d2b' : '#dc2626';
+        echo "<div id='sysFlashToast' class='flash-toast' style='position:fixed;bottom:24px;left:24px;z-index:9999;padding:12px 20px;border-radius:12px;background:{$bg};color:#fff;box-shadow:0 12px 28px rgba(0,0,0,0.18);display:flex;align-items:center;gap:12px;font-size:0.9rem;font-weight:600;animation:toastSlideIn 0.3s ease;'>
+            <i class='fa-solid {$icon}'></i>
             <span>{$msg}</span>
-            <button onclick='this.parentElement.remove()' style='background:none;border:none;color:#fff;font-size:1.2rem;cursor:pointer;'>&times;</button>
-        </div>";
+            <button onclick='this.parentElement.remove()' style='background:none;border:none;color:rgba(255,255,255,0.8);font-size:1.1rem;cursor:pointer;margin-left:8px;' title='Dismiss'>&times;</button>
+        </div>
+        <script>
+            setTimeout(() => {
+                const t = document.getElementById('sysFlashToast');
+                if (t) {
+                    t.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                    t.style.opacity = '0';
+                    t.style.transform = 'translateY(10px)';
+                    setTimeout(() => t.remove(), 400);
+                }
+            }, 4000);
+        </script>";
     }
 }
 

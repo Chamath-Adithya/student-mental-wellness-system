@@ -111,20 +111,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .brand-title { font-size: 1.5rem; font-weight: 800; color: var(--primary); letter-spacing: -0.5px; }
         .brand-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
         .form-group { margin-bottom: 18px; }
-        .form-group label { display: block; font-size: 0.825rem; font-weight: 600; margin-bottom: 6px; color: var(--text-dark); }
-        .input-wrapper { position: relative; display: flex; align-items: center; }
-        .input-wrapper i { position: absolute; left: 14px; color: var(--text-muted); font-size: 0.95rem; }
+        .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+        .input-wrapper > i.field-icon,
+        .input-wrapper > i:first-child {
+            position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 0.95rem; pointer-events: none; z-index: 1;
+        }
         .form-control {
             width: 100%; padding: 12px 14px 12px 42px; border-radius: 12px; border: 1px solid var(--border);
             font-size: 0.9rem; background: var(--bg); color: var(--text-dark); outline: none; transition: all 0.2s ease;
         }
         .form-control:focus { border-color: var(--primary-accent); background: var(--card); box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.2); }
         .password-toggle-btn {
-            position: absolute; right: 12px; background: none; border: none;
-            color: var(--text-muted); cursor: pointer; padding: 4px 8px; font-size: 0.95rem;
-            transition: color 0.2s ease;
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: transparent; border: none; outline: none;
+            color: var(--text-muted); cursor: pointer; padding: 6px; font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; transition: color 0.2s ease, background 0.2s ease;
+            z-index: 2; line-height: 1;
         }
-        .password-toggle-btn:hover { color: var(--primary-accent); }
+        .password-toggle-btn i {
+            position: static !important;
+            left: auto !important;
+            top: auto !important;
+            transform: none !important;
+            color: inherit !important;
+            font-size: 0.95rem !important;
+        }
+        .password-toggle-btn:hover { color: var(--primary-accent); background: rgba(0, 0, 0, 0.05); }
+        [data-theme="dark"] .password-toggle-btn:hover { background: rgba(255, 255, 255, 0.08); }
         .login-options {
             display: flex; justify-content: space-between; align-items: center;
             font-size: 0.825rem; margin-top: 14px; margin-bottom: 20px;
@@ -183,9 +198,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="form-group">
             <label for="password">Password</label>
             <div class="input-wrapper">
-                <i class="fa-solid fa-lock"></i>
-                <input type="password" id="password" name="password" class="form-control" required placeholder="Enter your password" style="padding-right: 40px;">
-                <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('password', 'pwdToggleIcon')" aria-label="Toggle password visibility" title="Show/Hide Password">
+                <i class="fa-solid fa-lock field-icon"></i>
+                <input type="password" id="password" name="password" class="form-control" required placeholder="Enter your password" style="padding-right: 44px;">
+                <button type="button" class="password-toggle-btn" tabindex="-1" onclick="togglePasswordVisibility('password', 'pwdToggleIcon')" aria-label="Toggle password visibility" title="Show/Hide Password">
                     <i class="fa-solid fa-eye" id="pwdToggleIcon"></i>
                 </button>
             </div>

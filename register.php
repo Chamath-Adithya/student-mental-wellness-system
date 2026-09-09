@@ -118,13 +118,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 0.9rem; background: var(--bg); color: var(--text-dark); outline: none; transition: 0.2s;
         }
         .form-control:focus { border-color: var(--primary); background: var(--card-bg); box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.2); }
-        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
         .password-toggle-btn {
-            position: absolute; right: 12px; background: none; border: none;
-            color: var(--text-muted); cursor: pointer; padding: 4px 8px; font-size: 0.95rem;
-            transition: color 0.2s ease;
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: transparent; border: none; outline: none;
+            color: var(--text-muted); cursor: pointer; padding: 6px; font-size: 0.95rem;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; transition: color 0.2s ease, background 0.2s ease;
+            z-index: 2; line-height: 1;
         }
-        .password-toggle-btn:hover { color: var(--primary); }
+        .password-toggle-btn i {
+            position: static !important;
+            left: auto !important;
+            top: auto !important;
+            transform: none !important;
+            color: inherit !important;
+            font-size: 0.95rem !important;
+        }
+        .password-toggle-btn:hover { color: var(--primary); background: rgba(0, 0, 0, 0.05); }
+        [data-theme="dark"] .password-toggle-btn:hover { background: rgba(255, 255, 255, 0.08); }
         .btn-submit {
             width: 100%; background: var(--primary); color: white; border: none; padding: 13px;
             border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: 0.2s;
@@ -181,8 +193,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="password">මුරපදය (Password) *</label>
                 <div class="input-wrapper">
-                    <input type="password" id="password" name="password" class="form-control" required minlength="6" placeholder="••••••••" style="padding-right: 40px;">
-                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('password', 'pwdToggleIcon1')" aria-label="Toggle password visibility" title="Show/Hide Password">
+                    <input type="password" id="password" name="password" class="form-control" required minlength="6" placeholder="••••••••" style="padding-right: 42px;">
+                    <button type="button" class="password-toggle-btn" tabindex="-1" onclick="togglePasswordVisibility('password', 'pwdToggleIcon1')" aria-label="Toggle password visibility" title="Show/Hide Password">
                         <i class="fa-solid fa-eye" id="pwdToggleIcon1"></i>
                     </button>
                 </div>
@@ -190,8 +202,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="form-group">
                 <label for="confirm_password">මුරපදය තහවුරු කරන්න *</label>
                 <div class="input-wrapper">
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required placeholder="••••••••" style="padding-right: 40px;">
-                    <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('confirm_password', 'pwdToggleIcon2')" aria-label="Toggle password visibility" title="Show/Hide Password">
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required placeholder="••••••••" style="padding-right: 42px;">
+                    <button type="button" class="password-toggle-btn" tabindex="-1" onclick="togglePasswordVisibility('confirm_password', 'pwdToggleIcon2')" aria-label="Toggle password visibility" title="Show/Hide Password">
                         <i class="fa-solid fa-eye" id="pwdToggleIcon2"></i>
                     </button>
                 </div>

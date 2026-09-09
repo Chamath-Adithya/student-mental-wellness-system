@@ -13,7 +13,7 @@ if ($isAdmin && !isset($_GET['preview'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sansun (සන්සුන්) - Student Mental Wellness Check-in System</title>
+    <title>Sansun - Student Mental Wellness Check-in System</title>
     
     <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     
@@ -344,10 +344,10 @@ if ($isAdmin && !isset($_GET['preview'])) {
      1. INSTITUTIONAL TOP NAVBAR
      ========================================================================== -->
 <header class="site-navbar">
-    <a href="<?php echo SITE_URL; ?>/index.php" class="brand-logo" title="Sansun (සන්සුන්) - Home">
+    <a href="<?php echo SITE_URL; ?>/index.php" class="brand-logo" title="Sansun - Home">
         <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
         <div class="brand-meta">
-            <div class="brand-title"><span id="txtBrand">Sansun</span> <span class="brand-title-badge">සන්සුන්</span></div>
+            <div class="brand-title"><span id="txtBrand">Sansun</span></div>
             <div class="brand-sub" id="txtBrandSub">Student Mental Wellness</div>
         </div>
     </a>
@@ -823,7 +823,7 @@ if ($isAdmin && !isset($_GET['preview'])) {
 <footer style="text-align:center; padding:45px 20px 35px; font-size:0.85rem; color:var(--text-muted); border-top:1px solid var(--border); background:var(--card-bg);">
     <div style="display:inline-flex; align-items:center; gap:10px; margin-bottom:12px;">
         <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img" style="width:36px; height:36px;">
-        <span style="font-weight:800; font-size:1.15rem; color:var(--primary); letter-spacing:-0.3px;">Sansun (සන්සුන්)</span>
+        <span style="font-weight:800; font-size:1.15rem; color:var(--primary); letter-spacing:-0.3px;">Sansun</span>
     </div>
     <p>&copy; <?php echo date('Y'); ?> <strong>Sansun</strong> - Student Mental Wellness Check-in System. Developed by B.A.I.D Bopitiya (DIT 14253 - DIT 14 Intake).</p>
     <p style="font-size:0.78rem; margin-top:6px; max-width:650px; margin-left:auto; margin-right:auto; opacity:0.85;">Clinical Disclaimer: Screening tools (PHQ-9 & GAD-7) are for educational wellness tracking and self-reflection, and do not substitute for formal psychiatric evaluation or diagnosis.</p>

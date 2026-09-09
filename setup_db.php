@@ -63,7 +63,7 @@ if ($isCli) {
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <title>Database Setup | Sansun (සන්සුන්)</title>
+    <title>Database Setup | Sansun</title>
     <link rel="icon" type="image/png" href="assets/images/logo.png?v=2">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -83,7 +83,7 @@ if ($isCli) {
     <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
         <img src="assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
         <div>
-            <h2 style="margin: 0; color: #1e4d2b; font-size:1.4rem;">Sansun (සන්සුන්)</h2>
+            <h2 style="margin: 0; color: #1e4d2b; font-size:1.4rem;">Sansun</h2>
             <p style="margin: 0; font-size:0.85rem; color:#64748b;">Database Setup & Installer</p>
         </div>
     </div>

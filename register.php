@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>නව ශිෂ්‍ය ලියාපදිංචිය | Sansun (සන්සුන්) - Register</title>
+    <title>නව ශිෂ්‍ය ලියාපදිංචිය | Sansun - Register</title>
     <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <a href="<?php echo SITE_URL; ?>/index.php" class="logo" title="Sansun Home">
         <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
-        <span>Sansun <span style="font-size:1.05rem; font-weight:700; opacity:0.9;">(සන්සුන්)</span></span>
+        <span>Sansun</span>
     </a>
     <h2 style="text-align: center; font-size: 1.4rem; margin-bottom: 6px; color: var(--text-dark);">නව ශිෂ්‍ය ලියාපදිංචිය</h2>
     <p style="text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px;">Student Mental Wellness Check-in System</p>

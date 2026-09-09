@@ -31,7 +31,7 @@ $userMoods = $moodStmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Wellness Dashboard | Sansun (සන්සුන්)</title>
+    <title>Student Wellness Dashboard | Sansun</title>
     <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     <!-- Fonts & Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -146,7 +146,7 @@ $userMoods = $moodStmt->fetchAll();
 <nav class="navbar">
     <a href="<?php echo SITE_URL; ?>/index.php" class="logo" title="Sansun Home">
         <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
-        <span>Sansun <span style="font-size:0.85rem; font-weight:600; opacity:0.85;">(සන්සුන්)</span></span>
+        <span>Sansun</span>
     </a>
 
     <div class="user-nav-profile">

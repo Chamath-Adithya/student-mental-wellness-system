@@ -54,7 +54,7 @@ $sevCount = (int)$db->query("SELECT COUNT(*) FROM assessments WHERE severity_lev
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counselor Control Center | Sansun (සන්සුන්)</title>
+    <title>Counselor Control Center | Sansun</title>
     <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -267,7 +267,7 @@ $sevCount = (int)$db->query("SELECT COUNT(*) FROM assessments WHERE severity_lev
         <a href="<?php echo SITE_URL; ?>/admin-dashboard.php" class="brand" title="Sansun Counselor Center">
             <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
             <div class="brand-text">
-                <strong>Sansun (සන්සුන්)</strong>
+                <strong>Sansun</strong>
                 <small>Counselor Center</small>
             </div>
         </a>

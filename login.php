@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institutional Portal Login | Sansun (සන්සුන්)</title>
+    <title>Institutional Portal Login | Sansun</title>
     <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     <!-- Modern Typography & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -176,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="<?php echo SITE_URL; ?>/index.php" title="Sansun Home">
             <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
         </a>
-        <h1 class="brand-title">Sansun <span style="font-size:1.05rem; font-weight:700; opacity:0.9;">(සන්සුන්)</span></h1>
+        <h1 class="brand-title">Sansun</h1>
         <p class="brand-subtitle">Student Mental Wellness Check-in System</p>
     </div>
 

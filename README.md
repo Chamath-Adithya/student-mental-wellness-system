@@ -1,4 +1,4 @@
-# 🌿 Student Mental Wellness Check-in System (Sansun - සන්සුන්)
+# 🌿 Student Mental Wellness Check-in System (Sansun)
 
 > **An Institutional Mental Health Monitoring & Confidential Student Counseling Web Platform**  
 > Built with **HTML5, CSS3, Vanilla JavaScript, PHP (PDO), and MySQL**.
@@ -7,7 +7,7 @@
 
 ## 📌 Project Information
 
-- **Project Title**: Student Mental Wellness Check-in System (*සන්සුන් - Sansun*)
+- **Project Title**: Student Mental Wellness Check-in System (*Sansun*)
 - **Student Name**: B.A.I.D Bopitiya
 - **Student ID**: `DIT 14253`
 - **Course / Batch**: DIT 14 Intake

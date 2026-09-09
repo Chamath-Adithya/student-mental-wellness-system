@@ -200,24 +200,39 @@ $userMoods = $moodStmt->fetchAll();
             <!-- Quick Mood Check-In -->
             <div class="card btn-no-print">
                 <div class="card-header">
-                    <span><i class="fa-solid fa-face-smile"></i> Quick Mood Log</span>
+                    <span><i class="fa-solid fa-heart-pulse"></i> Quick State Check-In</span>
                 </div>
-                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">How are you feeling right now?</p>
-                <div style="display:flex; justify-content:space-around; margin-bottom:14px;">
-                    <button type="button" onclick="quickMood('😊')" style="font-size:24px; background:none; border:1px solid var(--border-color); border-radius:50%; width:46px; height:46px; cursor:pointer;">😊</button>
-                    <button type="button" onclick="quickMood('😐')" style="font-size:24px; background:none; border:1px solid var(--border-color); border-radius:50%; width:46px; height:46px; cursor:pointer;">😐</button>
-                    <button type="button" onclick="quickMood('😔')" style="font-size:24px; background:none; border:1px solid var(--border-color); border-radius:50%; width:46px; height:46px; cursor:pointer;">😔</button>
-                    <button type="button" onclick="quickMood('😡')" style="font-size:24px; background:none; border:1px solid var(--border-color); border-radius:50%; width:46px; height:46px; cursor:pointer;">😡</button>
+                <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:14px;">How is your energy and headspace right now?</p>
+                <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:16px;">
+                    <button type="button" onclick="quickMood('thriving', 'fa-sun', 'Thriving')" title="Thriving" style="padding:10px 4px; background:#dcfce7; color:#15803d; border:1px solid #bbf7d0; border-radius:12px; cursor:pointer; font-size:0.8rem; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:4px;">
+                        <i class="fa-solid fa-sun" style="font-size:1.15rem;"></i> Thriving
+                    </button>
+                    <button type="button" onclick="quickMood('balanced', 'fa-seedling', 'Balanced')" title="Balanced" style="padding:10px 4px; background:#ccfbf1; color:#0f766e; border:1px solid #99f6e4; border-radius:12px; cursor:pointer; font-size:0.8rem; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:4px;">
+                        <i class="fa-solid fa-seedling" style="font-size:1.15rem;"></i> Balanced
+                    </button>
+                    <button type="button" onclick="quickMood('fatigued', 'fa-cloud-rain', 'Fatigued')" title="Fatigued" style="padding:10px 4px; background:#fef3c7; color:#b45309; border:1px solid #fde68a; border-radius:12px; cursor:pointer; font-size:0.8rem; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:4px;">
+                        <i class="fa-solid fa-cloud-rain" style="font-size:1.15rem;"></i> Fatigued
+                    </button>
+                    <button type="button" onclick="quickMood('distressed', 'fa-bolt', 'Distressed')" title="Distressed" style="padding:10px 4px; background:#fee2e2; color:#b91c1c; border:1px solid #fecaca; border-radius:12px; cursor:pointer; font-size:0.8rem; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:4px;">
+                        <i class="fa-solid fa-bolt" style="font-size:1.15rem;"></i> Distressed
+                    </button>
                 </div>
                 <div style="margin-top:16px;">
-                    <div class="info-label" style="margin-bottom:6px;">Recent Mood Entries</div>
+                    <div class="info-label" style="margin-bottom:6px;">Recent State Logs</div>
                     <ul style="list-style:none; font-size:0.85rem;">
-                        <?php foreach ($userMoods as $m): ?>
-                            <li style="padding:5px 0; border-bottom:1px dashed var(--border-color); display:flex; justify-content:space-between;">
-                                <span><?php echo $m['mood_emoji']; ?> <?php echo htmlspecialchars($m['mood_label']); ?></span>
-                                <small style="color:var(--text-muted);"><?php echo date('M d, H:i', strtotime($m['created_at'])); ?></small>
-                            </li>
-                        <?php endforeach; ?>
+                        <?php if (empty($userMoods)): ?>
+                            <li style="color:var(--text-muted); font-size:0.82rem;">No logs recorded yet.</li>
+                        <?php else: ?>
+                            <?php foreach ($userMoods as $m): ?>
+                                <li style="padding:6px 0; border-bottom:1px dashed var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+                                    <span>
+                                        <i class="fa-solid <?php echo htmlspecialchars($m['mood_icon'] ?? 'fa-circle-check'); ?>" style="color:var(--primary); margin-right:6px;"></i>
+                                        <strong><?php echo htmlspecialchars($m['mood_label']); ?></strong>
+                                    </span>
+                                    <small style="color:var(--text-muted);"><?php echo date('M d, H:i', strtotime($m['created_at'])); ?></small>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </div>
@@ -350,21 +365,25 @@ $userMoods = $moodStmt->fetchAll();
         localStorage.setItem('sansun_theme', isDark ? 'light' : 'dark');
     }
 
-    async function quickMood(emoji) {
+    async function quickMood(code, icon, label) {
         try {
             const res = await fetch(SITE_ROOT + '/api/mood.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ mood: emoji, note: 'Logged from Student Dashboard' })
+                body: JSON.stringify({ 
+                    mood_code: code, 
+                    mood_icon: icon, 
+                    mood_label: label, 
+                    note: 'Logged from Student Dashboard' 
+                })
             });
             const data = await res.json();
             if (data.success) {
-                alert("Mood " + emoji + " recorded!");
+                alert("State [" + label + "] recorded successfully!");
                 window.location.reload();
             }
         } catch (e) {
             alert("Error: " + e.message);
-        }
     }
 
     // Chart.js initialization

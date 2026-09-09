@@ -73,10 +73,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($userId) {
-        $stmt = $db->prepare("SELECT id, test_type, total_score, severity_level, is_high_risk, created_at FROM assessments WHERE user_id = ? ORDER BY id ASC");
+        $stmt = $db->prepare("SELECT id, test_type, total_score, total_score AS score, severity_level, is_high_risk, created_at FROM assessments WHERE user_id = ? ORDER BY id ASC");
         $stmt->execute([$userId]);
     } else {
-        $stmt = $db->query("SELECT id, test_type, total_score, severity_level, is_high_risk, created_at FROM assessments ORDER BY id DESC LIMIT 15");
+        $stmt = $db->query("SELECT id, test_type, total_score, total_score AS score, severity_level, is_high_risk, created_at FROM assessments ORDER BY id DESC LIMIT 15");
     }
     $history = $stmt->fetchAll();
 

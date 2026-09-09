@@ -1,292 +1,269 @@
 <?php
 require_once __DIR__ . '/config/db.php';
+require_login();
+
 $currentUser = current_user();
+if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
+    redirect(SITE_URL . '/admin-dashboard.php');
+}
 ?>
 <!DOCTYPE html>
 <html lang="si">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>සන්සුන් - Student Mental Wellness Check-in System</title>
+    <title>Student Mental Wellness Check-in System</title>
     
-    <!-- External UI Resources -->
+    <!-- Modern Typography & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
-            --primary: #4a7c59;
-            --primary-hover: #3b6346;
+            --primary: #1e4d2b;
+            --primary-accent: #2d6a4f;
             --primary-light: #f0f7f4;
-            --accent: #5b82a6;
-            --bg: #f7f9f8;
+            --accent: #40916c;
+            --bg: #f8fafc;
             --card-bg: #ffffff;
-            --text-main: #2d3732;
-            --text-muted: #6b7c75;
-            --border: #e2e9e5;
-            --shadow: 0 10px 30px rgba(74, 124, 89, 0.08);
-            --radius: 20px;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow: 0 12px 28px -6px rgba(30, 77, 43, 0.08);
+            --radius: 16px;
             --danger: #dc2626;
-            --whatsapp: #25d366;
+            --success: #16a34a;
+            --warning: #d97706;
         }
 
         [data-theme="dark"] {
-            --bg: #131b17;
-            --card-bg: #1c2621;
-            --text-main: #e8eee9;
-            --text-muted: #8fa097;
-            --border: #2c3a33;
-            --primary: #6b9e7a;
-            --primary-hover: #558362;
+            --bg: #0b1320;
+            --card-bg: #151f30;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #243248;
+            --primary: #52b788;
+            --primary-accent: #74c69d;
             --primary-light: #182820;
-            --accent: #7a9ebc;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+            --shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.4);
             --danger: #ef4444;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans Sinhala', system-ui, sans-serif; transition: background-color 0.3s, color 0.3s; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', 'Noto Sans Sinhala', sans-serif; transition: background-color 0.25s, color 0.25s; }
         html { scroll-behavior: smooth; }
         body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
 
-        /* Navigation Header */
-        header, .navbar {
+        /* Institutional Navbar */
+        .site-navbar {
             position: sticky; top: 0; background: var(--card-bg);
-            border-bottom: 1px solid var(--border); padding: 12px 24px;
-            display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
-            gap: 10px; z-index: 1000;
+            border-bottom: 1px solid var(--border); padding: 12px 30px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 16px; z-index: 1000; box-shadow: var(--shadow-sm);
         }
 
-        .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); text-decoration: none; display: flex; align-items: center; gap: 8px; }
-        .nav-links { display: flex; gap: 20px; list-style: none; align-items: center; }
-        .nav-links a { text-decoration: none; color: var(--text-main); font-weight: 500; font-size: 0.9rem; }
-        .nav-links a:hover { color: var(--primary); }
-        
-        .nav-controls {
-            display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+        .brand-logo {
+            display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-main);
         }
-
-        .btn-ctrl {
-            background: var(--primary-light); border: 1px solid var(--border);
-            color: var(--primary); padding: 7px 14px; border-radius: 30px;
-            cursor: pointer; font-weight: 600; font-size: 0.825rem;
-            display: flex; align-items: center; gap: 6px; text-decoration: none;
-            white-space: nowrap;
+        .brand-icon-box {
+            width: 40px; height: 40px; border-radius: 10px; background: var(--primary-light);
+            color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
         }
-        .btn-ctrl:hover { background: var(--border); }
+        .brand-meta { line-height: 1.2; }
+        .brand-title { font-weight: 700; font-size: 1.1rem; color: var(--primary); }
+        .brand-sub { font-size: 0.75rem; color: var(--text-muted); }
 
-        .btn-login {
-            background: var(--primary);
-            color: #ffffff !important;
-            border: none;
+        .nav-menu { display: flex; gap: 24px; list-style: none; align-items: center; }
+        .nav-menu a { text-decoration: none; color: var(--text-main); font-size: 0.9rem; font-weight: 600; transition: color 0.2s; display: flex; align-items: center; gap: 6px; }
+        .nav-menu a:hover { color: var(--primary); }
+
+        .nav-toolbar { display: flex; align-items: center; gap: 10px; }
+
+        .student-chip {
+            display: flex; align-items: center; gap: 10px; padding: 6px 14px; border-radius: 30px;
+            background: var(--primary-light); border: 1px solid var(--border); text-decoration: none; color: var(--text-main);
         }
-        .btn-login:hover { background: var(--primary-hover); }
+        .student-avatar {
+            width: 28px; height: 28px; border-radius: 50%; background: var(--primary); color: #fff;
+            display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;
+        }
+        .student-details { line-height: 1.1; }
+        .student-name { font-size: 0.8rem; font-weight: 700; color: var(--primary); }
+        .student-id { font-size: 0.7rem; color: var(--text-muted); }
 
-        .wrapper { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+        .btn-tool {
+            background: var(--card-bg); border: 1px solid var(--border); color: var(--text-main);
+            padding: 7px 12px; border-radius: 10px; font-size: 0.825rem; font-weight: 600;
+            cursor: pointer; display: inline-flex; align-items: center; gap: 6px; text-decoration: none;
+        }
+        .btn-tool:hover { border-color: var(--primary); color: var(--primary); }
+        .btn-tool-danger { color: var(--danger); }
+        .btn-tool-danger:hover { background: #fee2e2; border-color: #fca5a5; }
 
-        .audio-bar {
+        .wrapper { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+
+        /* Ambient Audio Strip */
+        .ambient-strip {
             background: var(--card-bg); border-bottom: 1px solid var(--border);
-            padding: 9px 20px; display: flex; justify-content: center; align-items: center; gap: 14px; font-size: 0.85rem; flex-wrap: wrap;
+            padding: 10px 30px; display: flex; justify-content: center; align-items: center; gap: 16px; font-size: 0.85rem; flex-wrap: wrap;
         }
 
-        /* Hero Section */
-        .hero {
-            padding: 50px 20px; background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 100%);
+        /* Hero Banner */
+        .hero-section {
+            padding: 45px 0; background: linear-gradient(180deg, var(--primary-light) 0%, var(--bg) 100%);
             border-bottom: 1px solid var(--border);
         }
-        
-        h1, .hero-title {
-            font-size: 2.2rem;
-            line-height: 1.3;
-            margin: 10px 0;
-            font-weight: 700;
+        .hero-layout { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; align-items: center; }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 20px;
+            background: var(--card-bg); border: 1px solid var(--border); color: var(--primary);
+            font-size: 0.8rem; font-weight: 700; margin-bottom: 16px;
+        }
+        .hero-heading { font-size: 2.2rem; line-height: 1.25; font-weight: 700; margin-bottom: 14px; }
+        .hero-lead { font-size: 1rem; color: var(--text-muted); margin-bottom: 28px; line-height: 1.7; }
+        .hero-buttons { display: flex; gap: 12px; flex-wrap: wrap; }
+
+        .btn-primary-action {
+            background: var(--primary); color: #fff; padding: 12px 26px; border-radius: 12px;
+            font-weight: 600; font-size: 0.925rem; text-decoration: none; border: none; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+        }
+        .btn-primary-action:hover { background: var(--primary-accent); transform: translateY(-1px); }
+
+        .btn-outline-action {
+            background: var(--card-bg); color: var(--text-main); padding: 12px 22px; border-radius: 12px;
+            font-weight: 600; font-size: 0.925rem; text-decoration: none; border: 1px solid var(--border); cursor: pointer;
+            display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-outline-action:hover { border-color: var(--primary); color: var(--primary); }
+
+        .hero-visual-card {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 30px; box-shadow: var(--shadow); text-align: center;
+        }
+        .hero-visual-icon {
+            width: 70px; height: 70px; border-radius: 50%; background: var(--primary-light);
+            color: var(--primary); display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; margin: 0 auto 16px auto;
         }
 
-        p.hero-subtitle {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin: 0 0 25px 0;
-            line-height: 1.7;
+        /* Section Layout */
+        .section-wrapper { padding: 50px 0; border-bottom: 1px solid var(--border); }
+        .section-header { text-align: center; margin-bottom: 35px; }
+        .section-title { font-size: 1.6rem; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .section-subtitle { font-size: 0.95rem; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+
+        /* Mood Vector Cards Grid */
+        .mood-cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px;
         }
-
-        .hero-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 30px; align-items: center; }
-
-        .btn-action {
-            background: var(--primary); color: white; padding: 12px 24px; border-radius: 30px;
-            text-decoration: none; font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 8px; border: none; cursor: pointer; transition: 0.2s;
+        .mood-card-item {
+            background: var(--card-bg); border: 1.5px solid var(--border); border-radius: var(--radius);
+            padding: 24px 18px; text-align: center; cursor: pointer; transition: all 0.2s ease;
         }
-        .btn-action:hover { background: var(--primary-hover); }
-
-        .btn-whatsapp { background-color: var(--whatsapp); color: white; }
-        .btn-whatsapp:hover { opacity: 0.9; }
-
-        .main-img {
-            width: 100%;
-            max-width: 440px;
-            height: auto;
-            border-radius: 20px;
-            box-shadow: var(--shadow);
-            display: block;
-            margin: 0 auto;
-            object-fit: cover;
+        .mood-card-item:hover { transform: translateY(-3px); border-color: var(--primary); box-shadow: var(--shadow); }
+        .mood-card-item.active { border-color: var(--primary); background: var(--primary-light); box-shadow: var(--shadow); }
+        .mood-icon-wrapper {
+            width: 50px; height: 50px; border-radius: 12px; margin: 0 auto 14px auto;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
         }
+        .icon-thriving { background: #dcfce7; color: #15803d; }
+        .icon-balanced { background: #ccfbf1; color: #0f766e; }
+        .icon-fatigued { background: #fef3c7; color: #b45309; }
+        .icon-distressed { background: #fee2e2; color: #b91c1c; }
 
-        .section { padding: 45px 0; border-bottom: 1px solid var(--border); }
-        .section-title { text-align: center; font-size: 1.6rem; color: var(--primary); margin-bottom: 24px; font-weight: 700; }
+        .mood-title { font-weight: 700; font-size: 1.05rem; margin-bottom: 4px; }
+        .mood-desc { font-size: 0.8rem; color: var(--text-muted); }
 
-        /* Mood Journal */
-        .mood-grid {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin: 20px 0;
+        /* Assessment Card */
+        .assessment-card {
+            max-width: 720px; margin: 0 auto; background: var(--card-bg); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
         }
-
-        .mood-btn {
-            font-size: 28px !important;
-            width: 56px;
-            height: 56px;
-            padding: 0;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            background-color: var(--card-bg);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s, background-color 0.2s, border-color 0.2s;
+        .tab-bar { display: flex; background: var(--primary-light); border-radius: 12px; padding: 6px; gap: 6px; margin-bottom: 24px; }
+        .tab-btn {
+            flex: 1; padding: 10px; border: none; background: transparent; border-radius: 8px;
+            font-size: 0.88rem; font-weight: 600; color: var(--text-muted); cursor: pointer;
         }
+        .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: var(--shadow-sm); }
 
-        .mood-btn:hover, .mood-btn.selected {
-            transform: scale(1.18);
-            background: var(--primary-light);
-            border-color: var(--primary);
+        .progress-track { width: 100%; height: 6px; background: var(--primary-light); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+        .progress-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s ease; }
+
+        .question-statement { font-size: 1.15rem; font-weight: 700; color: var(--text-main); margin-bottom: 20px; min-height: 56px; }
+        .options-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+        .option-choice {
+            padding: 14px 18px; border: 1px solid var(--border); border-radius: 12px; cursor: pointer;
+            font-size: 0.925rem; font-weight: 500; display: flex; align-items: center; justify-content: space-between;
+            background: var(--bg); transition: all 0.2s;
         }
+        .option-choice:hover { border-color: var(--primary); background: var(--primary-light); }
+        .option-choice.selected { border-color: var(--primary); background: var(--primary-light); font-weight: 700; color: var(--primary); }
 
-        .counseling-banner {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            color: #ffffff; padding: 30px; border-radius: var(--radius);
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 10px; box-shadow: var(--shadow);
+        /* Counseling Banner */
+        .counsel-strip {
+            background: linear-gradient(135deg, var(--primary), #1b4332); color: #fff;
+            border-radius: var(--radius); padding: 36px; display: flex; justify-content: space-between;
+            align-items: center; gap: 24px; flex-wrap: wrap; box-shadow: var(--shadow);
         }
+        .counsel-strip h3 { font-size: 1.35rem; margin-bottom: 6px; }
+        .counsel-strip p { opacity: 0.9; font-size: 0.95rem; }
 
-        .banner-content h3 { font-size: 1.3rem; margin-bottom: 6px; color: #ffffff; }
-        .banner-content p { font-size: 0.95rem; opacity: 0.92; color: #ffffff; }
-        .banner-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        /* Tables & Helplines */
+        .clean-table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+        .clean-table th, .clean-table td { padding: 14px 18px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+        .clean-table th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
 
-        .btn-banner-primary { background-color: #ffffff; color: var(--primary); padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 700; border: none; cursor: pointer; }
-        .btn-banner-emergency { background-color: var(--danger); color: #ffffff; padding: 10px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 700; text-decoration: none; }
-
-        /* Assessment Wizard */
-        .wizard-container {
-            max-width: 680px; margin: 0 auto; background: var(--card-bg);
-            padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border);
+        .helpline-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+        .helpline-box {
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px;
+            padding: 22px; text-align: center; box-shadow: var(--shadow-sm);
         }
-
-        .tab-container { display: flex; background: var(--primary-light); padding: 6px; border-radius: 12px; gap: 6px; margin-bottom: 24px; }
-        .tab-btn { flex: 1; padding: 10px; border: none; background: transparent; color: var(--text-muted); font-size: 0.9rem; font-weight: 600; border-radius: 8px; cursor: pointer; }
-        .tab-btn.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-
-        .progress-bar-bg { width: 100%; height: 8px; background: var(--primary-light); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
-        .progress-bar-fill { height: 100%; width: 0%; background: var(--primary); transition: width 0.3s; }
-
-        .options-group { display: grid; gap: 10px; margin: 20px 0; }
-        .option-btn { background: var(--bg); border: 1.5px solid var(--border); padding: 12px 16px; border-radius: 12px; cursor: pointer; font-size: 0.9rem; font-weight: 500; display: block; }
-        input[type="radio"] { display: none; }
-        input[type="radio"]:checked + .option-btn { background: var(--primary-light); color: var(--primary); border-color: var(--primary); font-weight: 700; }
-
-        .nav-actions { display: flex; gap: 12px; margin-top: 20px; }
-        .btn-nav { flex: 1; padding: 12px; border-radius: 10px; font-size: 0.9rem; font-weight: 600; border: none; cursor: pointer; }
-        .btn-prev { background: var(--bg); color: var(--text-muted); border: 1px solid var(--border); }
-        .btn-next { background: var(--primary); color: white; }
-
-        .checklist-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
-        .check-item { background: var(--card-bg); padding: 14px 18px; border-radius: 14px; border: 1px solid var(--border); font-size: 0.9rem; display: flex; align-items: center; gap: 12px; }
-
-        .helpline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
-        .helpline-card { background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid var(--border); text-align: center; }
-        .helpline-card i { font-size: 1.4rem; color: var(--primary); margin-bottom: 8px; }
-        .helpline-card strong { color: var(--primary); font-size: 1.4rem; display: block; margin-bottom: 4px; }
-        .helpline-card span { font-size: 0.85rem; color: var(--text-muted); }
-
-        .directory-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--card-bg); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-        .directory-table th, .directory-table td { padding: 12px 16px; text-align: left; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
-        .directory-table th { background: var(--primary-light); color: var(--primary); font-weight: 700; }
+        .helpline-number { font-size: 1.5rem; font-weight: 800; color: var(--primary); margin: 6px 0 2px 0; }
 
         /* Modals */
-        .modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: var(--card-bg); padding: 30px; border-radius: var(--radius); text-align: left; max-width: 480px; width: 92%; position: relative; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto; }
-        .close-btn { position: absolute; top: 14px; right: 18px; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; border: none; background: none; }
+        .modal-backdrop { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-panel { background: var(--card-bg); border-radius: var(--radius); max-width: 500px; width: 92%; padding: 32px; position: relative; box-shadow: var(--shadow); max-height: 90vh; overflow-y: auto; }
+        .modal-close { position: absolute; top: 16px; right: 18px; font-size: 1.4rem; background: none; border: none; cursor: pointer; color: var(--text-muted); }
 
-        .form-group { margin-bottom: 14px; }
-        .form-group label { display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border);
-            background: var(--bg); color: var(--text-main); font-size: 0.9rem; outline: none;
+        .form-field { margin-bottom: 16px; }
+        .form-field label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; }
+        .form-input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text-main); font-size: 0.9rem; outline: none; }
+        .form-input:focus { border-color: var(--primary); }
+
+        /* Pulsating Breathing Circle */
+        .breath-orb {
+            width: 130px; height: 130px; border-radius: 50%; background: var(--primary-light);
+            border: 4px solid var(--primary); margin: 24px auto; display: flex; align-items: center;
+            justify-content: center; font-weight: 700; color: var(--primary); font-size: 1rem;
+            transition: transform 4s ease-in-out;
         }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            border-color: var(--primary);
+        .breath-orb.expand { transform: scale(1.35); transition: transform 4s ease-in-out; }
+        .breath-orb.hold { transform: scale(1.35); }
+        .breath-orb.shrink { transform: scale(0.85); transition: transform 8s ease-in-out; }
+
+        /* Chatbot Floating Widget */
+        .chat-trigger {
+            position: fixed; bottom: 25px; right: 25px; width: 56px; height: 56px; border-radius: 50%;
+            background: var(--primary); color: #fff; border: none; box-shadow: 0 8px 24px rgba(30, 77, 43, 0.35);
+            cursor: pointer; z-index: 1500; font-size: 1.3rem; display: flex; align-items: center; justify-content: center;
         }
-
-        .breath-circle {
-            width: 140px; height: 140px; background: var(--primary-light); border: 4px solid var(--primary);
-            border-radius: 50%; margin: 25px auto; display: flex; justify-content: center; align-items: center;
-            font-weight: bold; color: var(--primary); font-size: 1.1rem; transition: transform 4s ease-in-out;
+        .chat-drawer {
+            position: fixed; bottom: 95px; right: 25px; width: 370px; height: 520px; max-width: calc(100vw - 40px);
+            background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius);
+            box-shadow: var(--shadow); z-index: 1500; display: none; flex-direction: column; overflow: hidden;
         }
-        .breath-circle.expand { transform: scale(1.3); transition: transform 4s ease-in-out; }
-        .breath-circle.hold { transform: scale(1.3); }
-        .breath-circle.shrink { transform: scale(0.85); transition: transform 8s ease-in-out; }
+        .chat-top { background: var(--primary); color: #fff; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; }
+        .chat-stream { flex: 1; padding: 14px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: var(--bg); font-size: 0.88rem; }
+        .chat-bubble { max-width: 85%; padding: 10px 14px; border-radius: 14px; line-height: 1.5; white-space: pre-wrap; }
+        .chat-bubble.bot { background: var(--card-bg); color: var(--text-main); align-self: flex-start; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
+        .chat-bubble.user { background: var(--primary); color: #fff; align-self: flex-end; border-bottom-right-radius: 2px; }
 
-        .grounding-list { list-style: none; margin: 15px 0; }
-        .grounding-list li { background: var(--bg); padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--primary); font-size: 0.9rem; }
-
-        /* Chatbot Widget */
-        .chatbot-toggle {
-            position: fixed; bottom: 25px; right: 25px;
-            width: 60px; height: 60px; border-radius: 50%;
-            background: var(--primary); color: white; border: none;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25); cursor: pointer;
-            z-index: 1500; font-size: 1.4rem; display: flex;
-            align-items: center; justify-content: center; transition: transform 0.2s;
-        }
-        .chatbot-toggle:hover { transform: scale(1.08); }
-
-        .chatbot-window {
-            position: fixed; bottom: 95px; right: 20px;
-            width: 370px; height: 520px; max-width: calc(100vw - 40px);
-            background: var(--card-bg); border: 1px solid var(--border);
-            border-radius: var(--radius); box-shadow: var(--shadow);
-            z-index: 1500; display: none; flex-direction: column;
-            overflow: hidden;
-        }
-
-        .chat-header { background: var(--primary); color: white; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 0.95rem; }
-        .chat-header div { display: flex; align-items: center; gap: 8px; }
-        .chat-header button { background: none; border: none; color: white; font-size: 1.1rem; cursor: pointer; }
-
-        .chat-body {
-            flex: 1; padding: 14px; overflow-y: auto;
-            display: flex; flex-direction: column; gap: 10px;
-            background: var(--bg); font-size: 0.88rem; line-height: 1.5; word-break: break-word;
-        }
-
-        .chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; white-space: pre-wrap; }
-        .chat-msg.bot { background: var(--card-bg); color: var(--text-main); align-self: flex-start; border: 1px solid var(--border); border-bottom-left-radius: 2px; }
-        .chat-msg.user { background: var(--primary); color: white; align-self: flex-end; border-bottom-right-radius: 2px; }
-
-        .quick-chips { display: flex; gap: 6px; padding: 8px 12px; overflow-x: auto; background: var(--card-bg); border-top: 1px solid var(--border); }
-        .quick-chips button { background: var(--bg); border: 1px solid var(--border); color: var(--text-main); border-radius: 15px; padding: 5px 10px; font-size: 0.78rem; white-space: nowrap; cursor: pointer; }
-
-        .chat-input-area { display: flex; padding: 10px; background: var(--card-bg); border-top: 1px solid var(--border); gap: 6px; align-items: center; }
-        .chat-input-area input { flex: 1; padding: 9px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg); color: var(--text-main); font-size: 0.88rem; outline: none; }
-        .chat-input-area button { background: var(--primary); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
-
-        @media (max-width: 768px) {
-            .hero-grid { grid-template-columns: 1fr; text-align: center; }
-            h1, .hero-title { font-size: 1.6rem; text-align: center; }
-            p.hero-subtitle { text-align: center; }
-            .nav-links { display: none; }
+        @media (max-width: 850px) {
+            .hero-layout { grid-template-columns: 1fr; text-align: center; }
+            .hero-heading { font-size: 1.8rem; }
+            .nav-menu { display: none; }
         }
     </style>
 </head>
@@ -294,378 +271,444 @@ $currentUser = current_user();
 
 <?php display_flash(); ?>
 
-<!-- NAVIGATION BAR -->
-<nav class="navbar">
-    <a href="<?php echo SITE_URL; ?>/index.php" class="logo">
-        <i class="fa-solid fa-leaf"></i> <span id="brandName">Sansun</span>
+<!-- 1. INSTITUTIONAL TOP NAVBAR -->
+<header class="site-navbar">
+    <a href="<?php echo SITE_URL; ?>/index.php" class="brand-logo">
+        <div class="brand-icon-box">
+            <i class="fa-solid fa-brain"></i>
+        </div>
+        <div class="brand-meta">
+            <div class="brand-title" id="txtBrand">Student Mental Wellness</div>
+            <div class="brand-sub">Confidential Check-in System</div>
+        </div>
     </a>
-    <ul class="nav-links">
-        <li><a href="#assessment" id="navAssessment">ඇගයීම</a></li>
-        <li><a href="#mood" id="navMood">Mood Journal</a></li>
-        <li><a href="#counseling" id="navCounseling">උපදේශනය</a></li>
-        <li><a href="#history" id="navHistory">ප්‍රගතිය</a></li>
-        <li><a href="#directory" id="navDirectory">සායන</a></li>
-        <?php if ($currentUser): ?>
-            <?php if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor'): ?>
-                <li><a href="<?php echo SITE_URL; ?>/admin-dashboard.php" style="color:var(--primary); font-weight:700;">Admin Dashboard</a></li>
-            <?php else: ?>
-                <li><a href="<?php echo SITE_URL; ?>/dashboard.php" style="color:var(--primary); font-weight:700;">My Dashboard</a></li>
-            <?php endif; ?>
-        <?php endif; ?>
+
+    <ul class="nav-menu">
+        <li><a href="#assessment"><i class="fa-solid fa-clipboard-check"></i> <span id="navAssessment">Assessment</span></a></li>
+        <li><a href="#mood"><i class="fa-solid fa-seedling"></i> <span id="navMood">Mood Log</span></a></li>
+        <li><a href="#counseling"><i class="fa-solid fa-user-doctor"></i> <span id="navCounseling">Counseling</span></a></li>
+        <li><a href="#history"><i class="fa-solid fa-chart-line"></i> <span id="navHistory">History</span></a></li>
+        <li><a href="#directory"><i class="fa-solid fa-hospital"></i> <span id="navDirectory">Clinics</span></a></li>
+        <li><a href="<?php echo SITE_URL; ?>/dashboard.php"><i class="fa-solid fa-user"></i> <span>Dashboard</span></a></li>
     </ul>
 
-    <div class="nav-controls">
-        <?php if ($currentUser): ?>
-            <a href="<?php echo ($currentUser['role'] === 'admin') ? SITE_URL . '/admin-dashboard.php' : SITE_URL . '/dashboard.php'; ?>" class="btn-ctrl btn-login">
-                <i class="fa-solid fa-user-check"></i> <span><?php echo htmlspecialchars($currentUser['name']); ?></span>
-            </a>
-            <a href="<?php echo SITE_URL; ?>/logout.php" class="btn-ctrl" title="Sign Out">
-                <i class="fa-solid fa-right-from-bracket"></i>
-            </a>
-        <?php else: ?>
-            <button class="btn-ctrl btn-login" onclick="openLoginModal()" id="userAuthBtn">
-                <i class="fa-solid fa-right-to-bracket"></i> <span id="navLogin">ඇතුළු වන්න</span>
-            </button>
-        <?php endif; ?>
-        
-        <button class="btn-ctrl" onclick="openGroundingModal()"><i class="fa-solid fa-hands-holding"></i> Grounding</button>
-        <button class="btn-ctrl" onclick="openBreathingModal()"><i class="fa-solid fa-wind"></i> <span id="navBreath">හුස්ම</span></button>
-        <button class="btn-ctrl" onclick="toggleLanguage()"><i class="fa-solid fa-globe"></i> <span id="langTxt">English</span></button>
-        <button class="btn-ctrl" onclick="toggleTheme()" aria-label="Toggle Theme"><i class="fa-solid fa-moon"></i></button>
-    </div>
-</nav>
+    <div class="nav-toolbar">
+        <!-- Logged-in Student Identity Chip -->
+        <a href="<?php echo SITE_URL; ?>/dashboard.php" class="student-chip">
+            <div class="student-avatar"><?php echo strtoupper(substr($currentUser['name'], 0, 1)); ?></div>
+            <div class="student-details">
+                <div class="student-name"><?php echo htmlspecialchars($currentUser['name']); ?></div>
+                <div class="student-id"><?php echo htmlspecialchars($currentUser['student_id'] ?: 'Student'); ?></div>
+            </div>
+        </a>
 
-<!-- AMBIENT NATURE AUDIO BAR -->
-<div class="audio-bar">
-    <span id="audioLabel"><i class="fa-solid fa-music"></i> සොබාදහමේ ශබ්ද (Ambient Sound):</span>
-    <button class="btn-ctrl" onclick="toggleAudio()"><i class="fa-solid fa-play" id="audioIcon"></i> Play/Pause</button>
-    <a href="https://wa.me/94771234567?text=Hello%20Sansun%20Support" target="_blank" rel="noopener noreferrer" class="btn-ctrl btn-whatsapp">
-        <i class="fa-brands fa-whatsapp"></i> <span id="btnWa">WhatsApp Support</span>
+        <!-- Interactive Wellness Modals Controls -->
+        <button class="btn-tool" onclick="openBreathingModal()" title="4-7-8 Breathing Technique">
+            <i class="fa-solid fa-wind"></i> <span id="btnTxtBreath">Breathing</span>
+        </button>
+        <button class="btn-tool" onclick="openGroundingModal()" title="5-4-3-2-1 Sensory Grounding">
+            <i class="fa-solid fa-hands-holding"></i> Grounding
+        </button>
+
+        <!-- Language & Theme Switchers -->
+        <button class="btn-tool" onclick="toggleLanguage()">
+            <i class="fa-solid fa-globe"></i> <span id="langTxt">සිංහල</span>
+        </button>
+        <button class="btn-tool" onclick="toggleTheme()" aria-label="Toggle Theme">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Logout -->
+        <a href="<?php echo SITE_URL; ?>/logout.php" class="btn-tool btn-tool-danger" title="Sign Out">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+    </div>
+</header>
+
+<!-- 2. AMBIENT RELAXATION AUDIO STRIP -->
+<div class="ambient-strip">
+    <span id="txtAudioLabel"><i class="fa-solid fa-headphones"></i> Nature Sound Therapy (Ambient Rain):</span>
+    <button class="btn-tool" onclick="toggleAmbientAudio()" id="btnAudioToggle">
+        <i class="fa-solid fa-play" id="audioIcon"></i> Play Sound
+    </button>
+    <a href="https://wa.me/94771234567?text=Hello%20Student%20Wellness%20Support" target="_blank" rel="noopener noreferrer" class="btn-tool" style="color:#16a34a;">
+        <i class="fa-brands fa-whatsapp"></i> Student Support Desk
     </a>
-    <audio id="ambientAudio" loop src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=rain-and-puddle-113337.mp3"></audio>
 </div>
 
-<!-- HERO SECTION -->
-<section class="hero">
+<!-- 3. HERO SECTION -->
+<section class="hero-section">
     <div class="wrapper">
-        <div class="hero-grid">
-            <div class="hero-text">
-                <h1 id="heroTitle">ඔබේ මානසික සුවතාවය වෙනුවෙන් සුරක්ෂිත ඉඩක්</h1>
-                <p class="hero-subtitle" id="heroDesc">
-                    විභාග සහ අධ්‍යාපනික පීඩනය හඳුනාගෙන, මනස සන්සුන් කරගැනීමට අවශ්‍ය වෘත්තීය මගපෙන්වීම් සහ උපදේශන පහසුකම් මෙහි ඇතුළත් වේ.
+        <div class="hero-layout">
+            <div>
+                <div class="hero-badge">
+                    <i class="fa-solid fa-shield-halved"></i> Institutional Counseling Bridge
+                </div>
+                <h1 class="hero-heading" id="heroTitle">A Safe & Confidential Space for Your Mental Wellness</h1>
+                <p class="hero-lead" id="heroDesc">
+                    Identify academic, exam, and personal stress early. Regular check-ins empower you to track emotional resilience and access professional counseling when you need it.
                 </p>
-                <div style="display:flex; gap:12px; flex-wrap:wrap;">
-                    <a href="#assessment" class="btn-action">
-                        <i class="fa-solid fa-heart-pulse"></i> <span id="heroBtn">පරීක්ෂාව ආරම්භ කරන්න</span>
+                <div class="hero-buttons">
+                    <a href="#assessment" class="btn-primary-action">
+                        <i class="fa-solid fa-heart-pulse"></i> <span id="heroBtn">Take Self-Check Assessment</span>
                     </a>
-                    <button class="btn-action btn-whatsapp" onclick="window.open('https://wa.me/94771234567?text=Hello%20Sansun%20Support','_blank')">
-                        <i class="fa-brands fa-whatsapp"></i> WhatsApp Chat
+                    <a href="#mood" class="btn-outline-action">
+                        <i class="fa-solid fa-calendar-check"></i> <span id="heroMoodBtn">Daily Reflection</span>
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <div class="hero-visual-card">
+                    <div class="hero-visual-icon">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <h3 style="font-size:1.25rem; margin-bottom:8px;" id="cardGreeting">Welcome, <?php echo htmlspecialchars($currentUser['name']); ?></h3>
+                    <p style="font-size:0.875rem; color:var(--text-muted); margin-bottom:20px;">
+                        Registration ID: <strong><?php echo htmlspecialchars($currentUser['student_id']); ?></strong> &bull; <?php echo htmlspecialchars($currentUser['intake']); ?>
+                    </p>
+                    <div style="display:flex; justify-content:space-around; border-top:1px solid var(--border); padding-top:16px;">
+                        <div>
+                            <div style="font-size:1.4rem; font-weight:700; color:var(--primary);">100%</div>
+                            <small style="font-size:0.75rem; color:var(--text-muted);">Confidential</small>
+                        </div>
+                        <div>
+                            <div style="font-size:1.4rem; font-weight:700; color:var(--primary);">PHQ-9</div>
+                            <small style="font-size:0.75rem; color:var(--text-muted);">Depression Scale</small>
+                        </div>
+                        <div>
+                            <div style="font-size:1.4rem; font-weight:700; color:var(--primary);">GAD-7</div>
+                            <small style="font-size:0.75rem; color:var(--text-muted);">Anxiety Scale</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 4. VECTOR-ICON DAILY MOOD JOURNAL -->
+<section class="section-wrapper" id="mood">
+    <div class="wrapper">
+        <div class="section-header">
+            <h2 class="section-title" id="moodHeading">Daily Emotional Reflection</h2>
+            <p class="section-subtitle" id="moodSubtitle">Select your dominant emotional state today to log patterns over the academic semester.</p>
+        </div>
+
+        <div style="max-width:850px; margin:0 auto;">
+            <div class="mood-cards-grid">
+                <!-- Thriving -->
+                <div class="mood-card-item" onclick="selectVectorMood('thriving', 'fa-sun', 'Thriving / ප්‍රබෝධමත්', this)">
+                    <div class="mood-icon-wrapper icon-thriving">
+                        <i class="fa-solid fa-sun"></i>
+                    </div>
+                    <div class="mood-title" id="mTitle1">Thriving</div>
+                    <div class="mood-desc" id="mDesc1">Energized & Motivated</div>
+                </div>
+
+                <!-- Balanced -->
+                <div class="mood-card-item" onclick="selectVectorMood('balanced', 'fa-seedling', 'Balanced / සන්සුන්', this)">
+                    <div class="mood-icon-wrapper icon-balanced">
+                        <i class="fa-solid fa-seedling"></i>
+                    </div>
+                    <div class="mood-title" id="mTitle2">Balanced</div>
+                    <div class="mood-desc" id="mDesc2">Calm & In Control</div>
+                </div>
+
+                <!-- Fatigued -->
+                <div class="mood-card-item" onclick="selectVectorMood('fatigued', 'fa-cloud-rain', 'Fatigued / වෙහෙසයි', this)">
+                    <div class="mood-icon-wrapper icon-fatigued">
+                        <i class="fa-solid fa-cloud-rain"></i>
+                    </div>
+                    <div class="mood-title" id="mTitle3">Fatigued</div>
+                    <div class="mood-desc" id="mDesc3">Low Energy / Drained</div>
+                </div>
+
+                <!-- Distressed -->
+                <div class="mood-card-item" onclick="selectVectorMood('distressed', 'fa-bolt', 'Distressed / පීඩිතයි', this)">
+                    <div class="mood-icon-wrapper icon-distressed">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <div class="mood-title" id="mTitle4">Distressed</div>
+                    <div class="mood-desc" id="mDesc4">Anxious / Overwhelmed</div>
+                </div>
+            </div>
+
+            <div style="background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:24px; box-shadow:var(--shadow-sm);">
+                <div class="form-field">
+                    <label for="moodNotes" id="lblMoodNote">Reflections or Notes (Optional)</label>
+                    <textarea id="moodNotes" rows="2" class="form-input" placeholder="What influenced your emotional state today? (e.g. coursework, sleep, personal)"></textarea>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <button class="btn-primary-action" onclick="submitMoodLog()" id="btnSaveMood">
+                        <i class="fa-solid fa-check"></i> Save Daily Reflection
+                    </button>
+                    <small id="moodStatusIndicator" style="color:var(--text-muted);"></small>
+                </div>
+                <div id="moodRecentStream" style="margin-top:20px; font-size:0.875rem;"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. COUNSELING STRIP BANNER -->
+<section class="section-wrapper" id="counseling">
+    <div class="wrapper">
+        <div class="counsel-strip">
+            <div>
+                <h3 id="counselStripTitle">Need Confidential Guidance from a Professional Counselor?</h3>
+                <p id="counselStripDesc">Schedule a one-on-one session online or in-person with complete privacy (Anonymous requests permitted).</p>
+            </div>
+            <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                <button class="btn-outline-action" onclick="openCounselingModal()" style="background:#fff; color:var(--primary); font-weight:700;">
+                    <i class="fa-solid fa-calendar-plus"></i> <span id="btnBookCounsel">Schedule Session</span>
+                </button>
+                <a href="tel:1926" class="btn-primary-action" style="background:#dc2626;">
+                    <i class="fa-solid fa-phone"></i> 1926 Emergency
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 6. CLINICAL ASSESSMENT WIZARD (PHQ-9 & GAD-7) -->
+<section class="section-wrapper" id="assessment">
+    <div class="wrapper">
+        <div class="section-header">
+            <h2 class="section-title" id="assessHeading">Standardized Self-Check Assessments</h2>
+            <p class="section-subtitle" id="assessSubtitle">Evidence-based clinical questionnaires designed to measure depression and anxiety indicators.</p>
+        </div>
+
+        <div class="assessment-card">
+            <!-- Tabs -->
+            <div class="tab-bar">
+                <button class="tab-btn active" id="tabPhq" onclick="switchTest('phq9')">
+                    <i class="fa-solid fa-chart-simple"></i> PHQ-9 (Depression Screening)
+                </button>
+                <button class="tab-btn" id="tabGad" onclick="switchTest('gad7')">
+                    <i class="fa-solid fa-heart-pulse"></i> GAD-7 (Anxiety Screening)
+                </button>
+            </div>
+
+            <div class="progress-track">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <!-- Question Flow -->
+            <div id="quizFlow">
+                <div style="font-size:0.8rem; font-weight:700; color:var(--primary); text-transform:uppercase; margin-bottom:6px;" id="qStepNum">
+                    Question 1 of 9
+                </div>
+                <div class="question-statement" id="qStatement"></div>
+                <div class="options-list" id="optionsContainer"></div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px;">
+                    <button class="btn-outline-action" id="btnPrevQ" onclick="moveQuestion(-1)" style="display:none;">
+                        <i class="fa-solid fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn-primary-action" id="btnNextQ" onclick="moveQuestion(1)">
+                        Next <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
             </div>
-            <div class="hero-image">
-                <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=600&q=80" alt="Relaxation" class="main-img">
+
+            <!-- Result Box -->
+            <div id="assessmentResultView" style="display:none; text-align:center; padding:10px 0;"></div>
+        </div>
+    </div>
+</section>
+
+<!-- 7. SCORE TREND CHART -->
+<section class="section-wrapper" id="history">
+    <div class="wrapper">
+        <div class="section-header">
+            <h2 class="section-title" id="chartHeading">Personal Score History & Trends</h2>
+            <p class="section-subtitle" id="chartSubtitle">Track changes in depression and anxiety indicators across consecutive check-ins.</p>
+        </div>
+
+        <div style="max-width:850px; margin:0 auto; background:var(--card-bg); border:1px solid var(--border); border-radius:var(--radius); padding:28px; box-shadow:var(--shadow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <span style="font-size:0.85rem; font-weight:700; color:var(--primary); text-transform:uppercase;">Historical Trajectory</span>
+                <a href="<?php echo SITE_URL; ?>/dashboard.php" class="btn-tool">
+                    <i class="fa-solid fa-table"></i> View Detailed Logs
+                </a>
+            </div>
+            <div style="position:relative; height:280px;">
+                <canvas id="mainTrendsChart"></canvas>
             </div>
         </div>
     </div>
 </section>
 
-<!-- DAILY MOOD JOURNAL SECTION -->
-<section class="section" id="mood">
+<!-- 8. RESOURCE DIRECTORY & HELPLINES -->
+<section class="section-wrapper" id="directory">
     <div class="wrapper">
-        <h2 class="section-title" id="moodTitle">දෛනික මනෝභාවය සටහන් කරන්න (Daily Mood Journal)</h2>
-        <div class="wizard-container" style="text-align: center;">
-            <p style="margin-bottom:15px; color:var(--text-muted);" id="moodDesc">අද දිනයේ ඔබට දැනෙන හැඟීම තෝරන්න:</p>
-            <div class="mood-grid">
-                <button class="mood-btn" onclick="selectMood('😊', this)" aria-label="Happy">😊</button>
-                <button class="mood-btn" onclick="selectMood('😐', this)" aria-label="Neutral">😐</button>
-                <button class="mood-btn" onclick="selectMood('😔', this)" aria-label="Sad">😔</button>
-                <button class="mood-btn" onclick="selectMood('😡', this)" aria-label="Angry">😡</button>
-            </div>
-            <div class="form-group">
-                <textarea id="moodNote" rows="2" placeholder="අද දිනය ගැන කුඩා සටහනක් තබන්න (Optional)..."></textarea>
-            </div>
-            <button class="btn-action" onclick="saveMoodEntry()" id="btnSaveMood" style="margin: 0 auto;">මනෝභාවය Save කරන්න</button>
-            <div id="moodLogList" style="margin-top:20px; text-align:left; font-size:0.85rem; color:var(--text-muted);"></div>
+        <div class="section-header">
+            <h2 class="section-title" id="dirHeading">Institutional & National Healthcare Directory</h2>
+            <p class="section-subtitle" id="dirSubtitle">Direct contacts to psychiatric and mental healthcare clinics across Sri Lanka.</p>
         </div>
-    </div>
-</section>
 
-<!-- COUNSELING BANNER -->
-<section class="section" id="counseling">
-    <div class="wrapper">
-        <div class="counseling-banner">
-            <div class="banner-content">
-                <h3 id="bannerTitle">ඔබට කවුරුන් හෝ සමඟ කතා කිරීමට අවශ්‍යද?</h3>
-                <p id="bannerDesc">විශ්වවිද්‍යාල උපදේශකවරයෙකු හා සම්බන්ධ වීමට හෝ ක්ෂණික සහාය ලබා ගැනීමට ඉදිරියට යන්න.</p>
-            </div>
-            <div class="banner-actions">
-                <button class="btn-banner-primary" onclick="openCounselingModal()" id="btnBookCounselor">උපදේශන වාරයක් වෙන්කරගන්න</button>
-                <a href="tel:1926" class="btn-banner-emergency" id="btnCall1926"><i class="fa-solid fa-phone"></i> 1926 අමතන්න</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ASSESSMENT SECTION (PHQ-9 / GAD-7) -->
-<section class="section" id="assessment">
-    <div class="wrapper">
-        <div class="wizard-container">
-            <div class="tab-container">
-                <button class="tab-btn active" id="tabPhq" onclick="switchTest('phq9')">PHQ-9 (විෂාදය / Depression)</button>
-                <button class="tab-btn" id="tabGad" onclick="switchTest('gad7')">GAD-7 (කාංසාව / Anxiety)</button>
-            </div>
-
-            <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill"></div></div>
-
-            <form id="wizardForm" onsubmit="event.preventDefault();">
-                <div id="questionsContainer"></div>
-                <div class="nav-actions">
-                    <button type="button" class="btn-nav btn-prev" id="prevBtn" onclick="navigateStep(-1)">ආපසු</button>
-                    <button type="button" class="btn-nav btn-next" id="nextBtn" onclick="navigateStep(1)">ඉදිරියට</button>
-                </div>
-            </form>
-
-            <div id="result" style="display:none; text-align: center; padding: 20px 0;"></div>
-        </div>
-    </div>
-</section>
-
-<!-- PROGRESS CHART SECTION -->
-<section class="section" id="history">
-    <div class="wrapper">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
-            <h2 class="section-title" id="chartTitle" style="margin-bottom:0;">ඔබේ ප්‍රගතිය (Past Scores)</h2>
-            <button class="btn-ctrl" onclick="togglePinProtection()" id="btnPinToggle"><i class="fa-solid fa-lock"></i> PIN Lock</button>
-        </div>
-        <div id="protectedHistoryContent" style="max-width:700px; margin:0 auto; background:var(--card-bg); padding:24px; border-radius:var(--radius); border:1px solid var(--border);">
-            <canvas id="historyChart"></canvas>
-        </div>
-    </div>
-</section>
-
-<!-- RESOURCE DIRECTORY SECTION -->
-<section class="section" id="directory">
-    <div class="wrapper">
-        <h2 class="section-title" id="dirTitle">දිස්ත්‍රික්ක අනුව මානසික සෞඛ්‍ය සායන (Resource Directory)</h2>
-        <div style="overflow-x:auto;">
-            <table class="directory-table">
+        <div style="max-width:900px; margin:0 auto 40px auto; overflow-x:auto;">
+            <table class="clean-table">
                 <thead>
                     <tr>
-                        <th id="thDistrict">දිස්ත්‍රික්කය</th>
-                        <th id="thHospital">රෝහල / මධ්‍යස්ථානය</th>
-                        <th id="thContact">දුරකථන අංකය</th>
+                        <th id="thDist">District</th>
+                        <th id="thHosp">Hospital / Specialized Center</th>
+                        <th id="thTel">Direct Contact</th>
                     </tr>
                 </thead>
-                <tbody id="directoryBody"></tbody>
+                <tbody id="clinicsTableBody"></tbody>
             </table>
         </div>
-    </div>
-</section>
 
-<!-- DAILY CHECKLIST SECTION -->
-<section class="section">
-    <div class="wrapper">
-        <h2 class="section-title" id="checkTitle">දෛනික මනෝවිද්‍යාත්මක පුරුදු (Daily Self-Care)</h2>
-        <div class="checklist-grid">
-            <div class="check-item"><input type="checkbox"> <span id="chk1">විනාඩි 10ක් හුස්ම ගැනීමේ ව්‍යායාම කිරීම</span></div>
-            <div class="check-item"><input type="checkbox"> <span id="chk2">වතුර ලීටර 2ක් ලබාගැනීම</span></div>
-            <div class="check-item"><input type="checkbox"> <span id="chk3">විනාඩි 15ක් එළිමහනේ ඇවිදීම</span></div>
-            <div class="check-item"><input type="checkbox"> <span id="chk4">පැය 7-8ක සුවබර නින්දක් ලැබීම</span></div>
+        <div class="section-header" style="margin-bottom:20px;">
+            <h3 style="font-size:1.25rem;" id="helpTitle">Emergency 24/7 Support Lines</h3>
+        </div>
+
+        <div class="helpline-row" style="max-width:900px; margin:0 auto;">
+            <div class="helpline-box">
+                <i class="fa-solid fa-phone-volume" style="color:var(--primary); font-size:1.5rem;"></i>
+                <div class="helpline-number">1926</div>
+                <strong id="hl1">National Mental Health Institute</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Toll-free 24/7 Government Helpline</p>
+            </div>
+
+            <div class="helpline-box">
+                <i class="fa-solid fa-headset" style="color:var(--primary); font-size:1.5rem;"></i>
+                <div class="helpline-number">1333</div>
+                <strong id="hl2">CCC Line Crisis Support</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Confidential emotional relief</p>
+            </div>
+
+            <div class="helpline-box">
+                <i class="fa-solid fa-hands-holding-child" style="color:var(--primary); font-size:1.5rem;"></i>
+                <div class="helpline-number">011 2696666</div>
+                <strong id="hl3">Sri Lanka Sumithrayo</strong>
+                <p style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">Befriending and suicide prevention</p>
+            </div>
         </div>
     </div>
 </section>
 
-<!-- HELPLINES SECTION -->
-<section class="section" id="helplines" style="background: var(--primary-light);">
-    <div class="wrapper">
-        <h2 class="section-title" id="helpTitle">ඔබට හදිසි සහායක් අවශ්‍යද?</h2>
-        <p style="text-align:center; color: var(--text-muted); max-width: 650px; margin: 0 auto 20px auto;" id="helpDesc">
-            ඔබ දැඩි මානසික පීඩනයකින් පසුවන්නේ නම්, නොමිලේ සහ උපරිම රහස්‍යභාවයෙන් යුතුව සහාය ලබාගැනීමට පහත සේවාවන් අමතන්න.
-        </p>
+<!-- 9. MODALS -->
+
+<!-- A. 4-7-8 Breathing Guide Modal -->
+<div class="modal-backdrop" id="modalBreath">
+    <div class="modal-panel" style="text-align:center;">
+        <button class="modal-close" onclick="closeBreathingModal()">&times;</button>
+        <h3 style="font-size:1.3rem; color:var(--primary); margin-bottom:6px;">4-7-8 Breathing Technique</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted);" id="breathSub">A clinically proven rhythm to reduce heart rate and trigger the parasympathetic nervous system.</p>
         
-        <div class="helpline-grid">
-            <div class="helpline-card">
-                <i class="fa-solid fa-phone-flip"></i>
-                <strong>1926</strong>
-                <span id="help1">ජාතික මානසික සෞඛ්‍ය විද්‍යායතනය</span>
-            </div>
-            <div class="helpline-card">
-                <i class="fa-solid fa-headset"></i>
-                <strong>1333</strong>
-                <span id="help2">CCC Line (24/7 නොමිලේ)</span>
-            </div>
-            <div class="helpline-card">
-                <i class="fa-solid fa-hands-holding-child"></i>
-                <strong>011 2696666</strong>
-                <span id="help3">ශ්‍රී ලංකා සුමිත්‍රයෝ</span>
-            </div>
-        </div>
-    </div>
-</section>
+        <div class="breath-orb" id="breathOrb">Ready...</div>
+        <div id="breathInstruction" style="font-weight:700; color:var(--primary); font-size:0.95rem; min-height:26px;"></div>
 
-<!-- CHATBOT WIDGET -->
-<button class="chatbot-toggle" onclick="toggleChatbot()" aria-label="Toggle Chatbot">
-    <i class="fa-solid fa-comments"></i>
+        <button class="btn-outline-action" onclick="closeBreathingModal()" style="margin-top:20px;">Close Exercise</button>
+    </div>
+</div>
+
+<!-- B. 5-4-3-2-1 Grounding Modal -->
+<div class="modal-backdrop" id="modalGround">
+    <div class="modal-panel">
+        <button class="modal-close" onclick="closeGroundingModal()">&times;</button>
+        <h3 style="font-size:1.3rem; color:var(--primary); margin-bottom:8px;">5-4-3-2-1 Sensory Grounding</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:18px;">When experiencing academic panic or racing thoughts, use your 5 senses to re-anchor in the present moment:</p>
+
+        <div style="display:flex; flex-direction:column; gap:10px; font-size:0.9rem;" id="groundingItems"></div>
+
+        <button class="btn-primary-action" onclick="closeGroundingModal()" style="width:100%; justify-content:center; margin-top:22px;">
+            Acknowledge & Close
+        </button>
+    </div>
+</div>
+
+<!-- C. Counseling Booking Modal -->
+<div class="modal-backdrop" id="modalCounsel">
+    <div class="modal-panel">
+        <button class="modal-close" onclick="closeCounselingModal()">&times;</button>
+        <h3 style="font-size:1.3rem; color:var(--primary); margin-bottom:8px;">Schedule Counseling Session</h3>
+        <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:20px;">Institutional sessions are strictly confidential. You may also submit anonymously.</p>
+
+        <form id="counselForm" onsubmit="submitCounselingBooking(event)">
+            <div class="form-field">
+                <label for="counselPrivacy">Confidentiality Preference</label>
+                <select id="counselPrivacy" class="form-input" onchange="toggleCounselorPrivacy(this.value)">
+                    <option value="named">Standard (Include My Name & Student ID)</option>
+                    <option value="anonymous">Anonymous Request (Identity Concealed)</option>
+                </select>
+            </div>
+
+            <div class="form-field" id="counselNameField">
+                <label for="counselName">Student Name & ID</label>
+                <input type="text" id="counselName" class="form-input" value="<?php echo htmlspecialchars($currentUser['name'] . ' (' . $currentUser['student_id'] . ')'); ?>">
+            </div>
+
+            <div class="form-field">
+                <label for="counselMode">Preferred Session Format</label>
+                <select id="counselMode" class="form-input">
+                    <option value="online">Online Confidential Session (Video / Chat)</option>
+                    <option value="in-person">In-Person Office Session (Health Unit)</option>
+                </select>
+            </div>
+
+            <div class="form-field">
+                <label for="counselDate">Preferred Date & Time</label>
+                <input type="datetime-local" id="counselDate" class="form-input" required value="<?php echo date('Y-m-d\TH:i', strtotime('+1 day 10:00')); ?>">
+            </div>
+
+            <div class="form-field">
+                <label for="counselNotes">Reason / Specific Notes (Optional)</label>
+                <textarea id="counselNotes" rows="3" class="form-input" placeholder="Briefly share any topics or concerns you would like to discuss..."></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary-action" style="width:100%; justify-content:center;">
+                <i class="fa-solid fa-paper-plane"></i> Submit Appointment Request
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- 10. AI CHATBOT WIDGET -->
+<button class="chat-trigger" onclick="toggleChatWindow()" aria-label="Open AI Assistant">
+    <i class="fa-solid fa-comment-dots"></i>
 </button>
 
-<div class="chatbot-window" id="chatbotWindow">
-    <div class="chat-header">
-        <div>
-            <i class="fa-solid fa-robot"></i>
-            <span id="chatTitle">සන්සුන් AI සහායක</span>
+<div class="chat-drawer" id="chatDrawer">
+    <div class="chat-top">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <i class="fa-solid fa-brain"></i>
+            <span id="chatHeaderTitle">Wellness AI Assistant</span>
         </div>
-        <button onclick="toggleChatbot()"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="toggleChatWindow()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:1.1rem;"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div class="chat-body" id="chatBody">
-        <div class="chat-msg bot" id="botIntroMsg">ආයුබෝවන්! 👋 මම 'සන්සුන්' AI සහායක. ඔබට අද දැනෙන දේ හෝ සිතට වදදෙන ඕනෑම දෙයක් මා සමඟ බෙදාගන්න පුළුවන්. මා ඔබට උදවු කරන්නේ කෙසේද?</div>
-    </div>
-    <div class="quick-chips">
-        <button onclick="sendQuickChip('මට පීඩනයක් දැනෙනවා')">මට පීඩනයක් දැනෙනවා</button>
-        <button onclick="sendQuickChip('මනස සන්සුන් කරගන්නේ කෙසේද?')">මනස සන්සුන් කරගන්නේ කෙසේද?</button>
-        <button onclick="sendQuickChip('1926 අමතන්නේ කෙසේද?')">1926 අමතන්නේ කෙසේද?</button>
-    </div>
-    <div class="chat-input-area">
-        <input type="text" id="chatInput" placeholder="ඔබේ පණිවිඩය ටයිප් කරන්න..." onkeypress="handleChatKeyPress(event)">
-        <button onclick="sendChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
-    </div>
-</div>
 
-<!-- LOGIN MODAL -->
-<div class="modal" id="loginModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeLoginModal()">&times;</button>
-        <h3 id="modalLoginHeader" style="color:var(--primary); margin-bottom:15px; text-align: center;">ගිණුමට පිවිසෙන්න (Login)</h3>
-        <form id="loginForm" onsubmit="handleAjaxLogin(event)">
-            <div class="form-group">
-                <label id="lblEmail" for="loginEmail">විද්‍යුත් තැපෑල හෝ ශිෂ්‍ය අංකය</label>
-                <input type="text" id="loginEmail" required placeholder="student@dit.ac.lk හෝ DIT 14253" value="student@dit.ac.lk">
-            </div>
-            <div class="form-group">
-                <label id="lblPassword" for="loginPassword">මුරපදය (Password)</label>
-                <input type="password" id="loginPassword" required placeholder="••••••••" value="student123">
-            </div>
-            <div id="loginErrorMsg" style="display:none; color:var(--danger); font-size:0.8rem; margin-bottom:10px;"></div>
-            <button type="submit" class="btn-action" style="width:100%; justify-content:center; margin-top:5px;" id="btnLoginSubmit">ඇතුළු වන්න</button>
-        </form>
+    <div class="chat-stream" id="chatStream">
+        <div class="chat-bubble bot" id="chatWelcomeMsg">Hello! I am your student wellness assistant. Feel free to share whatever is on your mind. How can I assist you today?</div>
+    </div>
 
-        <p style="text-align:center; margin-top:18px; font-size:0.85rem; color:var(--text-muted);" id="loginFooterNote">
-            නව ගිණුමක් නොමැතිද? <a href="#" onclick="openRegisterModal()" style="color:var(--primary); font-weight:bold;">ලියාපදිංචි වන්න</a>
-        </p>
+    <div style="display:flex; gap:6px; padding:8px 12px; overflow-x:auto; background:var(--card-bg); border-top:1px solid var(--border);">
+        <button class="btn-tool" style="font-size:0.75rem; padding:4px 8px;" onclick="sendQuickPrompt('I feel overwhelmed with exam stress')">Exam Stress</button>
+        <button class="btn-tool" style="font-size:0.75rem; padding:4px 8px;" onclick="sendQuickPrompt('How can I calm my mind right now?')">Calm My Mind</button>
+        <button class="btn-tool" style="font-size:0.75rem; padding:4px 8px;" onclick="sendQuickPrompt('How to contact 1926 helpline?')">1926 Hotline</button>
+    </div>
+
+    <div style="display:flex; padding:10px; background:var(--card-bg); border-top:1px solid var(--border); gap:8px;">
+        <input type="text" id="chatInputField" class="form-input" style="border-radius:20px;" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChatMessage()">
+        <button onclick="sendChatMessage()" class="btn-primary-action" style="padding:10px 14px; border-radius:50%;">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
     </div>
 </div>
 
-<!-- REGISTER MODAL -->
-<div id="registerModal" class="modal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeRegisterModal()">&times;</button>
-        <h3 style="color:var(--primary); margin-bottom:10px; text-align:center;"><i class="fa-solid fa-user-plus"></i> ශිෂ්‍ය ලියාපදිංචිය</h3>
-        <p style="text-align:center; color:var(--text-muted); font-size:0.85rem; margin-bottom:18px;">නව ගිණුමක් සාදා පද්ධතියට එකතු වන්න</p>
-
-        <form id="registerForm" onsubmit="handleAjaxRegister(event)">
-            <div class="form-group">
-                <label>සම්පූර්ණ නම (Full Name) *</label>
-                <input type="text" id="regFullname" required placeholder="e.g. B.A.I.D Bopitiya">
-            </div>
-
-            <div class="form-group">
-                <label>ශිෂ්‍ය අංකය (Student ID) *</label>
-                <input type="text" id="regStudentId" required placeholder="e.g. DIT 14253">
-            </div>
-
-            <div class="form-group">
-                <label>විද්‍යුත් තැපෑල (Email) *</label>
-                <input type="email" id="regEmail" required placeholder="name@dit.ac.lk">
-            </div>
-
-            <div class="form-group">
-                <label>මුරපදය (Password) *</label>
-                <input type="password" id="regPassword" required minlength="6" placeholder="••••••••">
-            </div>
-
-            <div id="regErrorMsg" style="display:none; color:var(--danger); font-size:0.8rem; margin-bottom:10px;"></div>
-            <button type="submit" class="btn-action" style="width: 100%; justify-content: center; margin-top: 6px;">ලියාපදිංචි වන්න</button>
-        </form>
-
-        <div style="text-align: center; margin-top: 15px; font-size: 0.85rem; color: var(--text-muted);">
-            දැනටමත් ගිණුමක් තිබේද? <a href="#" onclick="switchToLogin()" style="color: var(--primary); font-weight: 600; text-decoration: none;">ලොගින් වන්න</a>
-        </div>
-    </div>
-</div>
-
-<!-- COUNSELING MODAL -->
-<div class="modal" id="counselingModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeCounselingModal()">&times;</button>
-        <h3 id="modalCounselHeader" style="color:var(--primary); margin-bottom:15px;">උපදේශන සේවාව හා සම්බන්ධ වන්න</h3>
-        <form id="counselingForm" onsubmit="handleCounselingSubmit(event)">
-            <div class="form-group">
-                <label id="lblPrivacy" for="requestType">රහස්‍යතාවය (Privacy Option)</label>
-                <select id="requestType" required onchange="toggleNameFields()">
-                    <option value="named" id="optNamed">සාමාන්‍ය (නම සහ ශිෂ්‍ය අංකය ඇතුළත් කරන්න)</option>
-                    <option value="anonymous" id="optAnon">අඥාත අයුරින් (Anonymous Request)</option>
-                </select>
-            </div>
-
-            <div class="form-group" id="studentDetailsGroup">
-                <label id="lblName" for="studentName">සම්පූර්ණ නම / ශිෂ්‍ය අංකය</label>
-                <input type="text" id="studentName" placeholder="e.g., DIT 14253" value="<?php echo htmlspecialchars($currentUser['student_id'] ?? ''); ?>">
-            </div>
-
-            <div class="form-group">
-                <label id="lblMode" for="preferredMode">උපදේශන ක්‍රමය</label>
-                <select id="preferredMode" required>
-                    <option value="online" id="optOnline">මාර්ගගත (Online Chat / Video Call)</option>
-                    <option value="in-person" id="optInPerson">සෘජුව (In-Person Office Session)</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label id="lblDate" for="preferredDate">කැමති දිනය සහ වේලාව</label>
-                <input type="datetime-local" id="preferredDate" required value="<?php echo date('Y-m-d\TH:i', strtotime('+1 day 10:00')); ?>">
-            </div>
-
-            <div class="form-group">
-                <label id="lblNotes" for="notes">කෙටි සටහනක් (Optional)</label>
-                <textarea id="notes" rows="3" placeholder="ඔබට පවසන්නට ඇති දේ මෙහි සටහන් කරන්න..."></textarea>
-            </div>
-
-            <button type="submit" class="btn-action" style="width:100%; justify-content:center;" id="btnSubmitCounsel">ඉල්ලීම යොමු කරන්න</button>
-        </form>
-    </div>
-</div>
-
-<!-- BREATHING EXERCISE MODAL (4-7-8) -->
-<div class="modal" id="breathModal">
-    <div class="modal-content" style="text-align: center;">
-        <h3>4-7-8 Breathing Technique</h3>
-        <p style="color:var(--text-muted); font-size:0.85rem; margin-top:5px;" id="breathModalSub">මනස සන්සුන් කර ගැනීමට පහත උපදෙස් අනුගමනය කරන්න.</p>
-        <div class="breath-circle" id="breathCircle">ලෑස්ති වන්න...</div>
-        <p id="breathInstruction" style="font-weight:600; color:var(--primary); font-size:0.9rem; min-height: 24px;"></p>
-        <button class="btn-action" style="margin-top:15px;" onclick="closeBreathingModal()" id="closeBreathBtn">වසා දමන්න</button>
-    </div>
-</div>
-
-<!-- GROUNDING MODAL (5-4-3-2-1) -->
-<div class="modal" id="groundingModal">
-    <div class="modal-content">
-        <button class="close-btn" onclick="closeGroundingModal()">&times;</button>
-        <h3 style="color:var(--primary); margin-bottom:10px;" id="groundTitle">5-4-3-2-1 Grounding Technique</h3>
-        <p style="font-size:0.85rem; color:var(--text-muted);" id="groundSub">Panic Attack එකක් හෝ අධික බියක් දැනෙන විට මනස වර්තමානයට ගෙන ඒමට මෙය භාවිතා කරන්න:</p>
-        <ul class="grounding-list" id="groundList"></ul>
-        <button class="btn-action" style="width:100%; justify-content:center;" onclick="closeGroundingModal()" id="groundCloseBtn">තේරුණා / Close</button>
-    </div>
-</div>
-
-<footer style="text-align:center; padding:30px 15px; font-size:0.85rem; color:var(--text-muted);" id="footerText">
-    <p>© 2026 Student Mental Wellness Check-in System (Sansun). DIT 14253 B.A.I.D Bopitiya. Educational purposes only.</p>
+<footer style="text-align:center; padding:35px 20px; font-size:0.85rem; color:var(--text-muted); border-top:1px solid var(--border); background:var(--card-bg);">
+    <p>&copy; <?php echo date('Y'); ?> Student Mental Wellness Check-in System. Developed by B.A.I.D Bopitiya (DIT 14253 - DIT 14 Intake).</p>
+    <p style="font-size:0.78rem; margin-top:4px;">Clinical Disclaimer: Screening tools (PHQ-9 & GAD-7) are for educational wellness tracking and do not substitute for formal clinical diagnosis.</p>
 </footer>
 
-<!-- External and Main JavaScript Logic -->
+<!-- External Scripts Configuration -->
 <script>
     const SITE_ROOT = "<?php echo SITE_URL; ?>";
-    const IS_LOGGED_IN = <?php echo is_logged_in() ? 'true' : 'false'; ?>;
-    const CURRENT_USER_ROLE = "<?php echo $currentUser['role'] ?? 'guest'; ?>";
+    const LOGGED_IN_STUDENT_NAME = "<?php echo htmlspecialchars($currentUser['name']); ?>";
+    const LOGGED_IN_STUDENT_ID = "<?php echo htmlspecialchars($currentUser['student_id']); ?>";
 </script>
 <script src="<?php echo SITE_URL; ?>/assets/js/main.js"></script>
 </body>

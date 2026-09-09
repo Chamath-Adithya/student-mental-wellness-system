@@ -11,9 +11,8 @@
 - **Student Name**: B.A.I.D Bopitiya
 - **Student ID**: `DIT 14253`
 - **Course / Batch**: DIT 14 Intake
-- **Presentation Title**: Project Proposal Presentation - Student Mental Wellness Check-in-System
-- **Live Reference Inspiration**: [Sansun Mental Health Platform (sansun-web-app.vercel.app)](https://sansun-web-app.vercel.app/)
-- **GitHub Repository**: [https://github.com/Chamath-Adithya/student-mental-wellness-system](https://github.com/Chamath-Adithya/student-mental-wellness-system)
+- **Institution**: Faculty of Information Technology
+- **System Edition**: Enterprise Institutional Production v2.0
 
 ---
 

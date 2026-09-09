@@ -3,7 +3,8 @@ require_once __DIR__ . '/config/db.php';
 require_login();
 
 $currentUser = current_user();
-if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
+$isAdmin = ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor');
+if ($isAdmin && !isset($_GET['preview'])) {
     redirect(SITE_URL . '/admin-dashboard.php');
 }
 ?>
@@ -304,6 +305,18 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
 
 <?php display_flash(); ?>
 
+<?php if ($isAdmin): ?>
+<div style="background:#0f172a; color:#fff; padding:9px 24px; font-size:0.85rem; display:flex; justify-content:space-between; align-items:center; z-index:9999; border-bottom:1px solid #334155;">
+    <div style="display:flex; align-items:center; gap:10px;">
+        <span style="background:#1e4d2b; color:#86efac; padding:3px 10px; border-radius:12px; font-size:0.75rem; font-weight:800; letter-spacing:0.5px;">COUNSELOR PREVIEW</span>
+        <span>You are currently previewing the Student Wellness Portal interface.</span>
+    </div>
+    <a href="<?php echo SITE_URL; ?>/admin-dashboard.php" style="color:#52b788; text-decoration:none; font-weight:700; display:inline-flex; align-items:center; gap:6px;">
+        <i class="fa-solid fa-arrow-left"></i> Return to Control Panel
+    </a>
+</div>
+<?php endif; ?>
+
 <!-- ==========================================================================
      1. INSTITUTIONAL TOP NAVBAR
      ========================================================================== -->
@@ -443,7 +456,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
                     <div class="mood-icon-wrapper icon-thriving">
                         <i class="fa-solid fa-sun"></i>
                     </div>
-                    <div class="mood-title" id="mTitle1">Thriving</div>
+                    <div class="mood-title" id="mTitle1">Thriving <span style="font-size:1.2rem;">😊</span></div>
                     <div class="mood-desc" id="mDesc1">Energized & Motivated</div>
                 </div>
 
@@ -452,7 +465,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
                     <div class="mood-icon-wrapper icon-balanced">
                         <i class="fa-solid fa-seedling"></i>
                     </div>
-                    <div class="mood-title" id="mTitle2">Balanced</div>
+                    <div class="mood-title" id="mTitle2">Balanced <span style="font-size:1.2rem;">😌</span></div>
                     <div class="mood-desc" id="mDesc2">Calm & In Control</div>
                 </div>
 
@@ -461,7 +474,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
                     <div class="mood-icon-wrapper icon-fatigued">
                         <i class="fa-solid fa-cloud-rain"></i>
                     </div>
-                    <div class="mood-title" id="mTitle3">Fatigued</div>
+                    <div class="mood-title" id="mTitle3">Fatigued <span style="font-size:1.2rem;">🥱</span></div>
                     <div class="mood-desc" id="mDesc3">Low Energy / Drained</div>
                 </div>
 
@@ -470,7 +483,7 @@ if ($currentUser['role'] === 'admin' || $currentUser['role'] === 'counselor') {
                     <div class="mood-icon-wrapper icon-distressed">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
-                    <div class="mood-title" id="mTitle4">Distressed</div>
+                    <div class="mood-title" id="mTitle4">Distressed <span style="font-size:1.2rem;">😣</span></div>
                     <div class="mood-desc" id="mDesc4">Anxious / Overwhelmed</div>
                 </div>
             </div>

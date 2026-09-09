@@ -16,8 +16,8 @@
    ========================================================================== */
 const APP_DATA = {
     si: {
-        brandTitle: "ශිෂ්‍ය මානසික සුවතා පද්ධතිය",
-        brandSub: "රහස්‍ය සහ වෘත්තීය මගපෙන්වීම",
+        brandTitle: "Sansun (සන්සුන්)",
+        brandSub: "ශිෂ්‍ය මානසික සුවතා පද්ධතිය",
         navAssessment: "ස්වයං ඇගයීම",
         navMood: "දෛනික මනෝභාවය",
         navCounseling: "උපදේශනය",
@@ -81,8 +81,8 @@ const APP_DATA = {
         ]
     },
     en: {
-        brandTitle: "Student Mental Wellness",
-        brandSub: "Confidential Check-in System",
+        brandTitle: "Sansun",
+        brandSub: "Student Mental Wellness",
         navAssessment: "Assessment",
         navMood: "Mood Log",
         navCounseling: "Counseling",
@@ -246,6 +246,7 @@ function applyLanguageStrings() {
     };
 
     update('txtBrand', d.brandTitle);
+    update('txtBrandSub', d.brandSub);
     update('navAssessment', d.navAssessment);
     update('navMood', d.navMood);
     update('navCounseling', d.navCounseling);

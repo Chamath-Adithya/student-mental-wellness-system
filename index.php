@@ -13,7 +13,9 @@ if ($isAdmin && !isset($_GET['preview'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Mental Wellness Check-in System</title>
+    <title>Sansun (සන්සුන්) - Student Mental Wellness Check-in System</title>
+    
+    <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     
     <!-- Modern Typography & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -72,13 +74,34 @@ if ($isAdmin && !isset($_GET['preview'])) {
             display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-main);
             flex-shrink: 0;
         }
-        .brand-icon-box {
-            width: 40px; height: 40px; border-radius: 12px; background: var(--primary-light);
-            color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.25rem;
+        .brand-logo-img {
+            width: 44px; height: 44px; object-fit: contain;
+            border-radius: 12px;
+            padding: 2px;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+            filter: drop-shadow(0 3px 8px rgba(30, 77, 43, 0.16));
         }
-        .brand-meta { line-height: 1.2; }
-        .brand-title { font-weight: 800; font-size: 1.15rem; color: var(--primary); letter-spacing: -0.3px; }
-        .brand-sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+        .brand-logo:hover .brand-logo-img {
+            transform: scale(1.08) rotate(2deg);
+            filter: drop-shadow(0 5px 12px rgba(30, 77, 43, 0.25));
+        }
+        [data-theme="dark"] .brand-logo-img {
+            filter: drop-shadow(0 0 10px rgba(82, 183, 136, 0.65)) drop-shadow(0 0 20px rgba(45, 106, 79, 0.35));
+        }
+        [data-theme="dark"] .brand-logo:hover .brand-logo-img {
+            filter: drop-shadow(0 0 14px rgba(82, 183, 136, 0.85)) drop-shadow(0 0 26px rgba(45, 106, 79, 0.5));
+        }
+        .brand-meta { line-height: 1.25; }
+        .brand-title {
+            font-weight: 800; font-size: 1.25rem; color: var(--primary); letter-spacing: -0.3px;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .brand-title-badge {
+            font-size: 0.72rem; font-weight: 600; padding: 2px 7px;
+            background: var(--primary-light); color: var(--primary);
+            border-radius: 6px; border: 1px solid var(--border);
+        }
+        .brand-sub { font-size: 0.75rem; color: var(--text-muted); font-weight: 600; }
 
         .nav-menu { display: flex; gap: 28px; list-style: none; align-items: center; }
         .nav-menu a {
@@ -321,13 +344,11 @@ if ($isAdmin && !isset($_GET['preview'])) {
      1. INSTITUTIONAL TOP NAVBAR
      ========================================================================== -->
 <header class="site-navbar">
-    <a href="<?php echo SITE_URL; ?>/index.php" class="brand-logo">
-        <div class="brand-icon-box">
-            <i class="fa-solid fa-leaf"></i>
-        </div>
+    <a href="<?php echo SITE_URL; ?>/index.php" class="brand-logo" title="Sansun (සන්සුන්) - Home">
+        <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
         <div class="brand-meta">
-            <div class="brand-title" id="txtBrand">Sansun</div>
-            <div class="brand-sub">Student Mental Wellness</div>
+            <div class="brand-title"><span id="txtBrand">Sansun</span> <span class="brand-title-badge">සන්සුන්</span></div>
+            <div class="brand-sub" id="txtBrandSub">Student Mental Wellness</div>
         </div>
     </a>
 
@@ -772,8 +793,8 @@ if ($isAdmin && !isset($_GET['preview'])) {
 <div class="chat-drawer" id="chatDrawer">
     <div class="chat-top">
         <div style="display:flex; align-items:center; gap:8px;">
-            <i class="fa-solid fa-leaf"></i>
-            <span id="chatHeaderTitle">Wellness AI Assistant</span>
+            <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" style="width:26px; height:26px; object-fit:contain; filter:drop-shadow(0 0 6px rgba(255,255,255,0.45));">
+            <span id="chatHeaderTitle">Sansun Wellness AI</span>
         </div>
         <button onclick="toggleChatWindow()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:1.1rem;"><i class="fa-solid fa-xmark"></i></button>
     </div>
@@ -799,9 +820,13 @@ if ($isAdmin && !isset($_GET['preview'])) {
 <!-- ==========================================================================
      10. FOOTER
      ========================================================================== -->
-<footer style="text-align:center; padding:35px 20px; font-size:0.85rem; color:var(--text-muted); border-top:1px solid var(--border); background:var(--card-bg);">
-    <p>&copy; <?php echo date('Y'); ?> Student Mental Wellness Check-in System. Developed by B.A.I.D Bopitiya (DIT 14253 - DIT 14 Intake).</p>
-    <p style="font-size:0.78rem; margin-top:4px;">Clinical Disclaimer: Screening tools (PHQ-9 & GAD-7) are for educational wellness tracking and do not substitute for formal clinical diagnosis.</p>
+<footer style="text-align:center; padding:45px 20px 35px; font-size:0.85rem; color:var(--text-muted); border-top:1px solid var(--border); background:var(--card-bg);">
+    <div style="display:inline-flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img" style="width:36px; height:36px;">
+        <span style="font-weight:800; font-size:1.15rem; color:var(--primary); letter-spacing:-0.3px;">Sansun (සන්සුන්)</span>
+    </div>
+    <p>&copy; <?php echo date('Y'); ?> <strong>Sansun</strong> - Student Mental Wellness Check-in System. Developed by B.A.I.D Bopitiya (DIT 14253 - DIT 14 Intake).</p>
+    <p style="font-size:0.78rem; margin-top:6px; max-width:650px; margin-left:auto; margin-right:auto; opacity:0.85;">Clinical Disclaimer: Screening tools (PHQ-9 & GAD-7) are for educational wellness tracking and self-reflection, and do not substitute for formal psychiatric evaluation or diagnosis.</p>
 </footer>
 
 <!-- Global Client Configuration & Scripts -->

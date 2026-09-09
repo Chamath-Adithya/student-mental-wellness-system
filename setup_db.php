@@ -33,11 +33,11 @@ try {
     // Execute multi-query schema
     $pdo->exec($sql);
     $status[] = "Database 'wellness_system_db' initialized.";
-    $status[] = "All tables (users, mood_logs, assessments, counseling_requests) generated.";
-    $status[] = "Default seed accounts loaded:";
-    $status[] = " &bull; Student Account: student@dit.ac.lk / student123 (DIT 14253 B.A.I.D Bopitiya)";
-    $status[] = " &bull; Counselor Account: admin@sansun.com / admin123";
-    $status[] = "Vector icon mood logs, clinical assessments (PHQ-9 & GAD-7), and counseling sessions loaded.";
+    $status[] = "All relational tables (users, mood_logs, assessments, counseling_requests) generated.";
+    $status[] = "Initial administrative and student accounts provisioned:";
+    $status[] = " &bull; Student Account: student@dit.ac.lk (Student ID: DIT 14253)";
+    $status[] = " &bull; Counselor Account: admin@sansun.com";
+    $status[] = "Standard clinical assessment instruments (PHQ-9, GAD-7) and confidential counseling workflows activated.";
 
 } catch (Exception $e) {
     $error = $e->getMessage();
@@ -63,22 +63,30 @@ if ($isCli) {
 <html lang="si">
 <head>
     <meta charset="UTF-8">
-    <title>Database Setup | Student Mental Wellness System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Database Setup | Sansun (සන්සුන්)</title>
+    <link rel="icon" type="image/png" href="assets/images/logo.png?v=2">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0f172a; color: #fff; padding: 40px 20px; }
-        .card { max-width: 620px; margin: 0 auto; background: #fff; color: #1e293b; border-radius: 16px; padding: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
+        body { font-family: 'Plus Jakarta Sans', 'Noto Sans Sinhala', sans-serif; background: #0b1410; color: #fff; padding: 40px 20px; }
+        .card { max-width: 620px; margin: 0 auto; background: #fff; color: #1e293b; border-radius: 20px; padding: 35px; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
         .success { color: #15803d; }
         .error { color: #b91c1c; }
         ul { padding-left: 20px; margin: 20px 0; line-height: 1.8; font-size: 0.95rem; }
-        .btn { display: inline-block; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600; margin-right: 10px; font-size: 0.9rem; }
-        .btn-green { background: #2d6a4f; color: #fff; }
-        .btn-dark { background: #0f172a; color: #fff; }
+        .btn { display: inline-block; padding: 12px 24px; border-radius: 10px; text-decoration: none; font-weight: 700; margin-right: 10px; font-size: 0.9rem; }
+        .btn-green { background: #1e4d2b; color: #fff; }
+        .btn-green:hover { background: #2d6a4f; }
+        .brand-logo-img { width: 52px; height: 52px; object-fit: contain; }
     </style>
 </head>
 <body>
 <div class="card">
-    <h2 style="margin-top: 0; color: #2d6a4f;">Student Mental Wellness System - Database Installer</h2>
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:20px;">
+        <img src="assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
+        <div>
+            <h2 style="margin: 0; color: #1e4d2b; font-size:1.4rem;">Sansun (සන්සුන්)</h2>
+            <p style="margin: 0; font-size:0.85rem; color:#64748b;">Database Setup & Installer</p>
+        </div>
+    </div>
 
     <?php if ($error): ?>
         <h3 class="error">Installation Failed</h3>
@@ -92,10 +100,10 @@ if ($isCli) {
             <?php endforeach; ?>
         </ul>
 
-        <div style="background: #f0fdf4; padding: 16px; border-radius: 10px; margin-bottom: 24px; border: 1px dashed #86efac; font-size: 0.88rem;">
-            <strong>Default Login Credentials:</strong><br>
-            • <strong>Student Account:</strong> <code>student@dit.ac.lk</code> | Password: <code>student123</code><br>
-            • <strong>Counselor Account:</strong> <code>admin@sansun.com</code> | Password: <code>admin123</code>
+        <div style="background: #f0fdf4; padding: 18px 20px; border-radius: 12px; margin-bottom: 24px; border: 1px solid #86efac; font-size: 0.88rem; color: #166534;">
+            <strong style="display:block; margin-bottom: 6px; font-size: 0.95rem;">Initial System Accounts:</strong>
+            • <strong>Student Portal:</strong> <code>student@dit.ac.lk</code> (or ID: <code>DIT 14253</code>) | Password: <code>student123</code><br>
+            • <strong>Counselor Administration:</strong> <code>admin@sansun.com</code> | Password: <code>admin123</code>
         </div>
 
         <div style="display:flex; gap:10px; flex-wrap:wrap;">

@@ -25,7 +25,7 @@
 5. [Core Features & Modules](#-core-features--modules)
 6. [Database Schema & Data Entities](#-database-schema--data-entities)
 7. [Step-by-Step Installation & Setup Guide](#-step-by-step-installation--setup-guide)
-8. [Default Demo Accounts](#-default-demo-accounts)
+8. [Initial System Accounts](#-initial-system-accounts)
 9. [API Endpoints Reference](#-api-endpoints-reference)
 10. [සිංහල මාර්ගෝපදේශය (Sinhala User Guide)](#-සිංහල-මාර්ගෝපදේශය-sinhala-user-guide)
 
@@ -267,9 +267,9 @@ http://localhost/student-mental-wellness-system/setup_db.php
 
 ---
 
-## 🔑 Default Demo Accounts
+## 🔑 Initial System Accounts
 
-The database comes pre-seeded with sample student and counselor credentials:
+The database comes provisioned with initial student and counselor accounts:
 
 | Account Type | Email / Username | Student ID | Password | Portal Destination |
 | :--- | :--- | :--- | :--- | :--- |

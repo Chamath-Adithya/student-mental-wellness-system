@@ -54,7 +54,8 @@ $sevCount = (int)$db->query("SELECT COUNT(*) FROM assessments WHERE severity_lev
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Counselor Control Center | Student Mental Wellness</title>
+    <title>Counselor Control Center | Sansun (සන්සුන්)</title>
+    <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -88,10 +89,10 @@ $sevCount = (int)$db->query("SELECT COUNT(*) FROM assessments WHERE severity_lev
             --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Noto Sans Sinhala', sans-serif; transition: background-color 0.25s, color 0.25s; }
-        body { background-color: var(--main-bg); color: var(--text-dark); display: flex; min-height: 100vh; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Noto Sans Sinhala', sans-serif; }
+        body { background: var(--main-bg); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; transition: background 0.3s; }
 
-        /* Sidebar Styling */
+        /* Sidebar */
         .sidebar {
             width: 270px; background: var(--sidebar-bg); color: #fff; padding: 1.8rem 1.2rem;
             display: flex; flex-direction: column; justify-content: space-between; position: sticky;
@@ -100,9 +101,14 @@ $sevCount = (int)$db->query("SELECT COUNT(*) FROM assessments WHERE severity_lev
         .brand {
             display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; padding: 0 0.5rem; text-decoration: none; color: #fff;
         }
-        .brand-icon {
-            width: 38px; height: 38px; border-radius: 10px; background: #1e4d2b;
-            color: #86efac; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+        .brand-logo-img {
+            width: 42px; height: 42px; object-fit: contain;
+            border-radius: 10px;
+            filter: drop-shadow(0 0 10px rgba(82, 183, 136, 0.65));
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .brand:hover .brand-logo-img {
+            transform: scale(1.08) rotate(2deg);
         }
         .brand-text { line-height: 1.2; }
         .brand-text strong { display: block; font-size: 1.15rem; color: #fff; letter-spacing: -0.3px; }
@@ -258,13 +264,11 @@ $sevCount = (int)$db->query("SELECT COUNT(*) FROM assessments WHERE severity_lev
      ========================================================================== -->
 <aside class="sidebar">
     <div>
-        <a href="<?php echo SITE_URL; ?>/admin-dashboard.php" class="brand">
-            <div class="brand-icon">
-                <i class="fa-solid fa-leaf"></i>
-            </div>
+        <a href="<?php echo SITE_URL; ?>/admin-dashboard.php" class="brand" title="Sansun Counselor Center">
+            <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
             <div class="brand-text">
-                <strong>Sansun Admin</strong>
-                <small>Counseling Center</small>
+                <strong>Sansun (සන්සුන්)</strong>
+                <small>Counselor Center</small>
             </div>
         </a>
 

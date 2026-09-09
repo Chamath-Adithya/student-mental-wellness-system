@@ -47,7 +47,7 @@ if ($checkStmt->fetch()) {
 }
 
 $passwordHash = password_hash($password, PASSWORD_BCRYPT);
-$intake = 'DIT 14 Intake';
+$intake = sanitize($input['intake'] ?? 'General Intake');
 
 $insertStmt = $db->prepare("INSERT INTO users (full_name, student_id, email, password_hash, role, intake) VALUES (?, ?, ?, ?, ?, ?)");
 $insertStmt->execute([$fullName, $studentId, $email, $passwordHash, $role, $intake]);

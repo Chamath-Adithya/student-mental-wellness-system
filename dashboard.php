@@ -31,17 +31,18 @@ $userMoods = $moodStmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Wellness Dashboard | Sansun</title>
+    <title>Student Wellness Dashboard | Sansun (සන්සුන්)</title>
+    <link rel="icon" type="image/png" href="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2">
     <!-- Fonts & Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         :root {
             --main-bg: #f8fafc;
             --card-bg: #ffffff;
-            --primary: #4a7c59;
+            --primary: #1e4d2b;
             --primary-light: #eef4f0;
             --text-dark: #1e293b;
             --text-muted: #64748b;
@@ -50,14 +51,14 @@ $userMoods = $moodStmt->fetchAll();
         }
 
         [data-theme="dark"] {
-            --main-bg: #0f172a;
-            --card-bg: #1e293b;
-            --primary: #529465;
+            --main-bg: #0b1410;
+            --card-bg: #13221b;
+            --primary: #52b788;
             --primary-light: #1b2e24;
             --text-dark: #f8fafc;
             --text-muted: #94a3b8;
-            --border-color: #334155;
-            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+            --border-color: #1e382b;
+            --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', 'Noto Sans Sinhala', sans-serif; transition: background-color 0.3s, color 0.3s; }
@@ -68,16 +69,28 @@ $userMoods = $moodStmt->fetchAll();
             display: flex; justify-content: space-between; align-items: center; 
             box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-bottom: 1px solid var(--border-color);
         }
-        .logo { font-size: 1.3rem; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .logo { font-size: 1.25rem; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 10px; text-decoration: none; }
+        .brand-logo-img {
+            width: 40px; height: 40px; object-fit: contain;
+            border-radius: 10px;
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.25s ease;
+            filter: drop-shadow(0 2px 6px rgba(30, 77, 43, 0.16));
+        }
+        .logo:hover .brand-logo-img {
+            transform: scale(1.08) rotate(2deg);
+        }
+        [data-theme="dark"] .brand-logo-img {
+            filter: drop-shadow(0 0 10px rgba(82, 183, 136, 0.65)) drop-shadow(0 0 20px rgba(45, 106, 79, 0.35));
+        }
         .user-nav-profile { display: flex; align-items: center; gap: 14px; }
         .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; }
 
         .container { max-width: 1200px; margin: 2rem auto; padding: 0 1.5rem; }
         
         .welcome-card { 
-            background: linear-gradient(135deg, #4a7c59, #3b6346); 
+            background: linear-gradient(135deg, #1e4d2b, #2d6a4f); 
             color: white; border-radius: 20px; padding: 2rem 2.5rem; 
-            margin-bottom: 2rem; box-shadow: 0 15px 30px rgba(74, 124, 89, 0.2); 
+            margin-bottom: 2rem; box-shadow: 0 15px 30px rgba(30, 77, 43, 0.25); 
             display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
         }
         .welcome-card h2 { font-size: 1.7rem; font-weight: 700; }
@@ -131,8 +144,9 @@ $userMoods = $moodStmt->fetchAll();
 
 <!-- Top Navigation -->
 <nav class="navbar">
-    <a href="<?php echo SITE_URL; ?>/index.php" class="logo">
-        <i class="fa-solid fa-leaf"></i> Sansun Wellness
+    <a href="<?php echo SITE_URL; ?>/index.php" class="logo" title="Sansun Home">
+        <img src="<?php echo SITE_URL; ?>/assets/images/logo.png?v=2" alt="Sansun Logo" class="brand-logo-img">
+        <span>Sansun <span style="font-size:0.85rem; font-weight:600; opacity:0.85;">(සන්සුන්)</span></span>
     </a>
 
     <div class="user-nav-profile">

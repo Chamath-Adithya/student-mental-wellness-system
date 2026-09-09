@@ -69,7 +69,7 @@ Due to social stigma, fear of being judged, or simple lack of awareness of avail
 | **Backend** | PHP 8.x (Procedural + OOP helpers) | PDO Database abstraction, prepared statements, sessions |
 | **Database** | MySQL 8.x | Relational schema with foreign keys and cascade rules |
 | **Local Server** | WampServer (Apache + MySQL) | Hosted at `http://localhost/student-mental-wellness-system` |
-| **Version Control** | Git & GitHub | Complete commit history pushed to GitHub |
+| **Security & Architecture** | Session Encryption & Data Sanitization | Secure institutional student data standards |
 
 ---
 
@@ -100,8 +100,7 @@ student-mental-wellness-system/
 ├── logout.php                # Session termination handler
 ├── register.php              # Dedicated student registration page
 ├── setup_db.php              # 1-Click automated database installer & seeder
-├── README.md                 # Complete project documentation
-└── .gitignore                # Git ignore configuration
+└── README.md                 # Complete project documentation
 ```
 
 ---
